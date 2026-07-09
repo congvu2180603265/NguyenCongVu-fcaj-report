@@ -52,6 +52,6 @@ For technical configuration details and setup steps, see the original article on
 {{% notice tip %}}
 Screenshot of this post shared on the AWS Study Group Facebook group here.
 {{% /notice %}}
-![Facebook post screenshot](/images/anhblog1.png)
+![Facebook post screenshot](/images/blog1.png)
 
 #AWS #AWSSecretsManager #GitGuardian #DevSecOps #CloudSecurity #NonHumanIdentity #NHI #CyberSecurity #BackendDevelopment #DevOpsVN

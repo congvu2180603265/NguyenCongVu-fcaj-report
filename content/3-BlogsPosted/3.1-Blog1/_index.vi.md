@@ -52,6 +52,6 @@ Chi tiết về cấu hình và các bước thiết lập kỹ thuật, bạn c
 {{% notice tip %}}
 Ảnh chụp bài đăng trên nhóm Facebook AWS Study Group để tại đây.
 {{% /notice %}}
-![Facebook post screenshot](/images/anhblog1.png)
+![Facebook post screenshot](/images/blog1.png)
 
 #AWS #AWSSecretsManager #GitGuardian #DevSecOps #CloudSecurity #NonHumanIdentity #NHI #CyberSecurity #BackendDevelopment #DevOpsVN
