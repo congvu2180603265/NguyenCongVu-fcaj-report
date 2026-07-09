@@ -1,21 +1,39 @@
 ﻿---
-title: "Blog 3"
-date: 2024-01-01
+title: "AWS Transform – When AI Automatically Cleans Up Technical Debt Across Thousands of Repositories"
+date: 2026-06-20
 weight: 3
 chapter: false
 pre: " <b> 3.3. </b> "
 ---
-# SESSION POLICIES IN AMAZON EKS POD IDENTITY
 
-Amazon EKS Pod Identity has recently added the session policies feature, allowing you to narrow IAM permissions flexibly and precisely for each pod without needing to create many separate IAM roles. This is an important step forward that helps apply the principle of least privilege more effectively in large-scale Kubernetes environments.
+AWS has just launched a new feature within AWS Transform: Continuous Modernization (currently in preview), essentially a tool that automatically scans, detects, and fixes technical debt across an organization's entire codebase, without humans having to manually handle each repo.
 
-Key points to know:
+### The Problem It Solves
 
-* A session policy is an inline IAM policy specified when creating or updating a Pod Identity association.
-* Effective permissions = intersection between the IAM role permissions and the session policy → the session policy can only narrow permissions, not expand them.
-* Helps avoid over-permissioning when reusing a single IAM role for multiple workloads with different needs.
-* Supports both same-account and cross-account (via IAM role chaining).
-* Significantly reduces the number of IAM roles that need to be managed, helping avoid hitting IAM quota limits in large clusters.
-* Easily configured through the AWS Management Console, AWS CLI, or AWS SDK when creating an association between a Kubernetes ServiceAccount and an IAM role.
+Companies often spend up to 30% of their IT budget just maintaining legacy systems. A common situation is using a patchwork of disconnected tools: one tool detects outdated dependencies, another checks vulnerabilities, another checks code quality, but nothing ties it all together and automatically fixes things at scale.
 
-This feature is especially useful when you have many applications running on the same IAM role but need different permission restrictions (for example: one pod only reads a specific S3 bucket, another pod only calls certain APIs).
+The result: engineering teams get bogged down cleaning up instead of building new features. And ironically, AI coding agents make this situation worse — code gets generated faster, but debt piles up faster too.
+
+### How It Works
+
+There are two modes:
+
+* **Continuous mode** — continuously scans the entire repository against predefined policies (or the organization's own custom policies). When it detects a repo that has fallen behind the baseline, it automatically creates a pull request to fix it and notifies that team. The team just needs to review and merge.
+* **Campaign mode** — for larger modernization projects, such as migrating a framework or upgrading a major version across hundreds of apps at once.
+
+Out of the box, it already supports: upgrading the Java version, upgrading Node.js, migrating the AWS SDK, and updating Lambda runtimes before they lose support.
+
+### What's Interesting
+
+It integrates with the AWS Security Agent, meaning source-code-level security vulnerabilities are brought into the same detection-and-fix pipeline, instead of being a separate tool.
+
+It can also be used via MCP, meaning it can be integrated into an organization's existing coding agents.
+
+Original article link: [aws.amazon.com/blogs/aws/proactively-reduce-tech-debt-autonomously-with-aws-transform-continuous-modernization-preview](https://aws.amazon.com/vi/blogs/aws/proactively-reduce-tech-debt-autonomously-with-aws-transform-continuous-modernization-preview)
+
+{{% notice tip %}}
+Screenshot of this post shared on the AWS Study Group Facebook group here.
+{{% /notice %}}
+![Facebook post screenshot](/images/anhblog3.png)
+
+#AWS #AWSTransform #TechnicalDebt #DevOps #AIAgent #CloudModernization
