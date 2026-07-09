@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Avatar for Nguyen Cong Vu">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1f4b99"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+    <linearGradient id="ring" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#7dd3fc"/>
+      <stop offset="100%" stop-color="#a78bfa"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="128" fill="url(#bg)"/>
+  <circle cx="256" cy="206" r="96" fill="#e2e8f0" opacity="0.12"/>
+  <circle cx="256" cy="206" r="118" fill="none" stroke="url(#ring)" stroke-width="10" opacity="0.85"/>
+  <circle cx="256" cy="198" r="70" fill="#f8fafc"/>
+  <path d="M142 402c14-74 63-112 114-112s100 38 114 112" fill="#f8fafc"/>
+  <text x="256" y="248" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="72" font-weight="700" fill="#1e293b">NCV</text>
+  <text x="256" y="450" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="26" letter-spacing="3" fill="#cbd5e1">CONG VU</text>
+</svg>
