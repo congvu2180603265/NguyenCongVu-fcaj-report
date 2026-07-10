@@ -99,9 +99,7 @@ Sau khi hoàn tất, nhấn **Deploy** để lưu mã nguồn.
 
 ![Cập nhật mã nguồn Lambda](/images/5-Workshop/5.7-lambda-functions/5.7.4-post-processing/upload-code.png?featherlight=false&width=90pc)
 
-{{% notice note %}}
-Cần nhấn **Deploy** sau mỗi lần thay đổi mã nguồn. Nếu không, Lambda vẫn chạy phiên bản code trước đó.
-{{% /notice %}}
+
 
 ---
 
@@ -125,7 +123,7 @@ Thêm các biến môi trường sau:
 | `OPENAI_SECRET_NAME` | `playwright/openai-api-key` |
 | `SES_SENDER_EMAIL` | Email đã xác thực trong Amazon SES |
 
-![Cấu hình Environment Variables](/images/5-Workshop/5.7-lambda-functions/5.7.4-post-processing/env-vars.png?featherlight=false&width=90pc)
+![Cấu hình Environment Variables](/images/5-Workshop/5.7-lambda-functions/5.7.4-post-processing/eve-var.png?featherlight=false&width=90pc)
 
 Ý nghĩa của từng biến:
 
@@ -161,10 +159,6 @@ Cấu hình các thông tin:
 ![Cấu hình VPC cho Lambda](/images/5-Workshop/5.7-lambda-functions/5.7.4-post-processing/vpc-config.png?featherlight=false&width=90pc)
 
 Lambda được đặt trong Private Subnet để truy cập các tài nguyên nội bộ thông qua VPC Endpoint hoặc NAT Gateway.
-
-{{% notice info %}}
-AWS có thể hiển thị cảnh báo nên sử dụng ít nhất hai subnet để đảm bảo High Availability. Trong phạm vi bài workshop, một Private Subnet vẫn có thể được sử dụng.
-{{% /notice %}}
 
 Nhấn **Save** để lưu cấu hình.
 
@@ -244,9 +238,6 @@ Trong phần **Event pattern**, nhập nội dung:
 }
 ```
 
-{{% notice warning %}}
-Thay AWS Account ID và Cluster ARN bằng thông tin thực tế trong tài khoản AWS đang sử dụng.
-{{% /notice %}}
 
 Việc lọc theo `clusterArn` giúp tránh trường hợp Lambda bị gọi bởi các ECS Task không liên quan trong cùng tài khoản.
 
