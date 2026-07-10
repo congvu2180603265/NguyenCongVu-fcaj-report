@@ -54,14 +54,14 @@ This function listens to the task queue and launches the ECS Fargate tasks.
 1. Create a new function named `playwright-coordinator` using the same Python runtime and the `playwright-lambda-role`.
 2. Scroll down to the **Code source** section, click **Upload from** and select **.zip file**. Choose the `playwright-coordinator.zip` file you prepared in the Prerequisites section and click **Save**.
 3. In the function overview, click **Add trigger**.
-3. Select **SQS** as the source.
-4. Choose the `playwright-task-queue` you created earlier.
-5. Set the **Batch size** to `1`. This ensures that each ECS task is launched individually per request. Click **Add**.
+4. Select **SQS** as the source.
+5. Choose the `playwright-task-queue` you created earlier.
+6. Set the **Batch size** to `1`. This ensures that each ECS task is launched individually per request. Click **Add**.
 ![Coordinator SQS Trigger](/images/5-Workshop/5.7-lambda-functions/sqs-trigger-coordinator.png)
-6. Go to the **Configuration** tab, select **General configuration**, and click **Edit**.
-7. Adjust the **Timeout** to `30` seconds and the **Ephemeral storage** to `512` MB. Click **Save**.
+7. Go to the **Configuration** tab, select **General configuration**, and click **Edit**.
+8. Adjust the **Timeout** to `30` seconds and the **Ephemeral storage** to `512` MB. Click **Save**.
 ![Coordinator Timeout](/images/5-Workshop/5.7-lambda-functions/timeout-coordinator.png)
-8. Navigate to **Environment variables** and add the following keys with their corresponding values (VPC Subnets, Security Groups, Cluster names, etc.):
+9. Navigate to **Environment variables** and add the following keys with their corresponding values (VPC Subnets, Security Groups, Cluster names, etc.):
     - `ASSIGN_PUBLIC_IP`: `DISABLED`
     - `CONTAINER_NAME`: `playwright-container`
     - `ECS_CLUSTER_NAME`: `playwright-cluster`
@@ -80,10 +80,10 @@ This function processes messages that fail to be processed by the coordinator.
 1. Create a new function named `playwright-error-handler` using the same Python runtime and the `playwright-lambda-role`.
 2. Scroll down to the **Code source** section, click **Upload from** and select **.zip file**. Choose the `playwright-error-handler.zip` file you prepared in the Prerequisites section and click **Save**.
 3. Click **Add trigger**.
-3. Select **SQS** and choose the `playwright-dlq` (Dead Letter Queue).
-4. Set the **Batch size** to `3`. Click **Add**.
+4. Select **SQS** and choose the `playwright-dlq` (Dead Letter Queue).
+5. Set the **Batch size** to `3`. Click **Add**.
 ![Error Handler SQS Trigger](/images/5-Workshop/5.7-lambda-functions/sqs-trigger-error-handler.png)
-5. Navigate to **Environment variables** and add the following:
+6. Navigate to **Environment variables** and add the following:
     - `ERROR_DYNAMODB_TABLE`: `playwright-error-log`
     - `TEST_HISTORY_TABLE`: `playwright-test-history`
 ![Error Handler Environment Variables](/images/5-Workshop/5.7-lambda-functions/env-vars-error-handler.png)
