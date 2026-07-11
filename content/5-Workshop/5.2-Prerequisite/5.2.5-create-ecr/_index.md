@@ -1,148 +1,129 @@
 ---
 title : "Create Amazon ECR Repository"
-date : 2026-07-10
+date : 2026-06-13
 weight : 5
 chapter : false
 pre : " <b> 5.2.5. </b> "
 ---
 
-## Create Amazon ECR Repository
+#### Create an Amazon ECR Repository
 
-In this section, you will create an **Amazon Elastic Container Registry (Amazon ECR)** repository to store the Docker image used by the Playwright Runner container.
+In this section, we will create a private repository on **Amazon Elastic Container Registry (Amazon ECR)** to store the Playwright Runner's Docker image. Amazon ECS Fargate will pull this image when launching test tasks.
 
-Amazon ECR is a fully managed container image registry that integrates seamlessly with Amazon ECS and AWS Fargate. It securely stores Docker images and provides a central location for managing container versions.
-
-The repository created in this section will be used to:
-
-- Store the Playwright Runner Docker image.
-- Deploy containers on Amazon ECS Fargate.
-- Manage Docker image versions using tags.
-- Securely pull images through IAM authentication.
-- Support future CI/CD automation.
-
----
-
-## Step 1: Open Amazon ECR
-
-Sign in to the **AWS Management Console**.
-
-In the search bar, enter:
-
-```text
-Elastic Container Registry
-```
-
-Select **Amazon ECR**.
-
-From the navigation pane, choose
-
-```text
-Repositories
-```
-
-Then choose
-
-```text
-Create repository
-```
-
-![Create Repository](/images/5-Prerequisite/5.2.5-create-ecr/create-repository.png?featherlight=false&width=90pc)
-
----
-
-## Step 2: Configure the Repository
-
-Configure the repository with the following settings.
+Repository information:
 
 | Property | Value |
-|-----------|-------|
-| Visibility settings | Private |
-| Repository name | `playwright-runner` |
-| Image tag mutability | `Mutable` |
-| Encryption | `AES-256` |
-| Scan on push | Enabled |
-
-Leave the remaining settings as the default values.
-
-After completing the configuration, choose
-
-```text
-Create repository
-```
-
----
-
-## Step 3: Verify the Repository
-
-After a few moments, Amazon ECR creates the repository successfully.
-
-The repository list should display the newly created repository.
-
-![Repository Created](/images/5-Prerequisite/5.2.5-create-ecr/repository-created.png?featherlight=false&width=90pc)
-
-Open the **playwright-runner** repository to review its configuration.
-
-![Repository Details](/images/5-Prerequisite/5.2.5-create-ecr/repository-details.png?featherlight=false&width=90pc)
-
-Verify the following information:
-
-| Property | Expected Value |
-|-----------|----------------|
-| Repository name | `playwright-runner` |
-| Repository URI | `<AWS Account ID>.dkr.ecr.ap-southeast-1.amazonaws.com/playwright-runner` |
+|---|---|
+| AWS Region | `ap-southeast-1` |
 | Visibility | `Private` |
+| Repository name | `playwright-runner` |
 | Tag mutability | `Mutable` |
-| Encryption type | `AES-256` |
-| Scan frequency | `Scan on push` |
-
----
-
-## Step 4: View Push Commands
-
-From the repository page, choose
-
-```text
-View push commands
-```
-
-Then select the **Windows** tab.
-
-Amazon ECR automatically generates the PowerShell and Docker commands required to authenticate Docker and push container images to the repository.
-
-![View Push Commands](/images/5-Prerequisite/5.2.5-create-ecr/view-push-commands-windows.png?featherlight=false&width=90pc)
-
-The generated commands include:
-
-- Authenticate Docker with Amazon ECR.
-- Build the Docker image.
-- Tag the Docker image.
-- Push the Docker image to the repository.
-
-> **Note**
->
-> These commands are generated automatically based on your AWS account, AWS Region, and repository name.
->
-> You do not need to execute these commands in this section. They will be used later in the workshop when building and pushing the Playwright Runner Docker image.
-
----
-
-## Expected Result
-
-After completing this section, an Amazon ECR repository named **playwright-runner** has been created successfully.
-
-The repository is now ready to store Docker images that will later be deployed to Amazon ECS Fargate.
-
-```text
-Amazon ECR
-└── playwright-runner
-```
-
-The repository should display the following configuration:
-
-| Property | Value |
-|-----------|-------|
-| Repository name | `playwright-runner` |
-| Visibility | `Private` |
-| Image tag mutability | `Mutable` |
 | Encryption | `AES-256` |
-| Scan on push | Enabled |
+| Image scanning | Scan on push |
+
+---
+
+**Step 1:** Open Amazon ECR
+
+Sign in to the **AWS Management Console**, search for **Elastic Container Registry**, then open:
+
+```text
+Private registry
+→ Repositories
+→ Create repository
+```
+
+Select **Private** and enter the repository name:
+
+```text
+playwright-runner
+```
+
+Keep **Image tag mutability** as `Mutable`, enable scan on push, and keep encryption as `AES-256`. Then select **Create repository**.
+
+![Configure the ECR repository](/images/5-Workshop/5.2-Prerequisite/5.2.5-create-ecr/create-repository.png?featherlight=false&width=90pc)
+
+{{% notice note %}}
+`Mutable` is fine for a workshop since the `latest` tag can be updated. In production, prefer immutable version tags such as a Git commit SHA and consider selecting `Immutable`.
+{{% /notice %}}
+
+---
+
+**Step 2:** Verify the created repository
+
+Once created successfully, the **Private repositories** list will show `playwright-runner` along with its URI, tag mode, and encryption type.
+
+![Repository created](/images/5-Workshop/5.2-Prerequisite/5.2.5-create-ecr/repository-created.png?featherlight=false&width=90pc)
+
+Open the repository and verify:
+
+- Repository name: `playwright-runner`
+- Tag mutability: `Mutable`
+- Encryption type: `AES-256`
+- Scan frequency: `Scan on push`
+
+![Repository details](/images/5-Workshop/5.2-Prerequisite/5.2.5-create-ecr/repository-details.png?featherlight=false&width=90pc)
+
+---
+
+**Step 3:** View the push commands
+
+In the repository, select **View push commands**, then select the **Windows** tab. AWS will display commands specific to your current account and Region.
+
+![Push commands on Windows](/images/5-Workshop/5.2-Prerequisite/5.2.5-create-ecr/view-push-commands-windows.png?featherlight=false&width=90pc)
+
+---
+
+**Step 4:** Log Docker in to ECR
+
+Open PowerShell in the folder containing the `Dockerfile`. Replace `<ACCOUNT_ID>` with your AWS Account ID and run:
+
+```powershell
+aws ecr get-login-password --region ap-southeast-1 | docker login --username AWS --password-stdin <ACCOUNT_ID>.dkr.ecr.ap-southeast-1.amazonaws.com
+```
+
+Expected result:
+
+```text
+Login Succeeded
+```
+
+{{% notice warning %}}
+Never put ECR login passwords, access keys, or tokens into source code. The token generated by the login command is only valid temporarily.
+{{% /notice %}}
+
+---
+
+**Step 5:** Build, tag, and push the Docker image
+
+Build the image from the `Dockerfile`:
+
+```powershell
+docker build -t playwright-runner .
+```
+
+Tag it with the ECR repository URI:
+
+```powershell
+docker tag playwright-runner:latest <ACCOUNT_ID>.dkr.ecr.ap-southeast-1.amazonaws.com/playwright-runner:latest
+```
+
+Push the image to ECR:
+
+```powershell
+docker push <ACCOUNT_ID>.dkr.ecr.ap-southeast-1.amazonaws.com/playwright-runner:latest
+```
+
+---
+
+**Step 6:** Confirm the image
+
+Go back to the `playwright-runner` repository, open the **Images** tab, then refresh the page. The `latest` tag should appear, and the scan status should show no unresolved critical vulnerabilities.
+
+The repository URI is in the form:
+
+```text
+<ACCOUNT_ID>.dkr.ecr.ap-southeast-1.amazonaws.com/playwright-runner:latest
+```
+
+This URI will be used when creating the ECS task definition for the Playwright Runner.

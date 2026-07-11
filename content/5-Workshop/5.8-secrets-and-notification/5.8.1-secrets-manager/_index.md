@@ -1,6 +1,6 @@
 ---
 title : "Secrets Manager & AI API Key"
-date : 2026-07-10
+date : 2026-06-19
 weight : 1
 chapter : false
 pre : " <b> 5.8.1. </b> "
@@ -22,7 +22,7 @@ Using Secrets Manager provides the following benefits:
 
 ---
 
-### Step 1: Open AWS Secrets Manager
+**Step 1:** Open AWS Secrets Manager
 
 Sign in to the **AWS Management Console**.
 
@@ -42,7 +42,7 @@ Store a new secret
 
 ---
 
-### Step 2: Choose the Secret Type
+**Step 2:** Choose the Secret Type
 
 On the **Choose secret type** page, select:
 
@@ -74,7 +74,7 @@ Never expose your real API Key in screenshots or public repositories. Blur or hi
 
 ---
 
-### Step 3: Configure the Secret
+**Step 3:** Configure the Secret
 
 Enter the following information:
 
@@ -89,7 +89,7 @@ Then choose **Next**.
 
 ---
 
-### Step 4: Configure Rotation
+**Step 4:** Configure Rotation
 
 For this workshop, automatic rotation is not required.
 
@@ -103,7 +103,7 @@ Choose **Next**.
 
 ---
 
-### Step 5: Review and Store
+**Step 5:** Review and Store
 
 Review the configuration.
 
@@ -123,7 +123,7 @@ Store
 
 ---
 
-### Step 6: Verify the Secret
+**Step 6:** Verify the Secret
 
 After the secret has been created successfully, open:
 
@@ -145,7 +145,7 @@ Do **not** click **Retrieve secret value** when taking screenshots because the A
 
 ---
 
-### Step 7: Configure Lambda Environment Variable
+**Step 7:** Configure Lambda Environment Variable
 
 Open:
 
@@ -165,11 +165,9 @@ Verify the following variable exists:
 
 The Lambda function uses this variable to determine which secret should be retrieved.
 
-![Lambda Environment Variable](/images/5-Workshop/5.8-secrets-and-notification/lambda-secret-variable.png?featherlight=false&width=90pc)
-
 ---
 
-### Step 8: Retrieve the Secret in Lambda
+**Step 8:** Retrieve the Secret in Lambda
 
 The Lambda function retrieves the secret using the following Python code.
 
@@ -197,7 +195,7 @@ The function automatically retrieves the latest API Key stored in Secrets Manage
 
 ---
 
-### Step 9: Required IAM Permission
+**Step 9:** Required IAM Permission
 
 The Lambda execution role must allow the following permission:
 
@@ -215,7 +213,7 @@ This permission allows Lambda to retrieve only the required secret.
 
 ---
 
-### Expected Result
+#### Expected Result
 
 After completing this section, the workflow is as follows:
 
@@ -237,3 +235,7 @@ Call AI API
 ```
 
 The AI API Key is now securely stored and can be accessed only by the Lambda function through AWS Secrets Manager.
+
+---
+
+Next, we will move on to **[5.8.2. SES Email Notification](../5.8.2-notification/)** to configure the email notification channel.

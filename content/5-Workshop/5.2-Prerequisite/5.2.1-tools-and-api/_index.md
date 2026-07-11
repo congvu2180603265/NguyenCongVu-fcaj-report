@@ -1,6 +1,6 @@
 ---
 title : "Tools & API Key"
-date : 2024-01-01 
+date : 2026-07-10
 weight : 1
 chapter : false
 pre : " <b> 5.2.1. </b> "
@@ -16,9 +16,21 @@ Before building the Serverless Playwright system, you need to prepare the follow
 
 **2. Source Code**
 - You need to download the pre-packaged source codes for the Frontend (UI) and Backend (processing).
-- Download all source codes here: **[ [...] Source code download link will be updated later ]**
+- Download the source files below:
 
-*(Note: After downloading, you will have zip files containing the `dist` folder for S3 and the `playwright` source code for AWS Lambda/Fargate).*
+| File | Description |
+|------|-------------|
+| [lambda-backend.zip](/5-Workshop/5.2-Prerequisite/5.2.1-tools-and-api/lambda-backend.zip) | Main backend Lambda function |
+| [lambda-coordinator.zip](/5-Workshop/5.2-Prerequisite/5.2.1-tools-and-api/lambda-coordinator.zip) | Coordinator Lambda function |
+| [lambda-error-handler.zip](/5-Workshop/5.2-Prerequisite/5.2.1-tools-and-api/lambda-error-handler.zip) | Error handler Lambda function |
+| [lambda-postprocessing.zip](/5-Workshop/5.2-Prerequisite/5.2.1-tools-and-api/lambda-postprocessing.zip) | Post-processing Lambda function |
+| [dist.zip](/5-Workshop/5.2-Prerequisite/5.2.1-tools-and-api/dist.zip) | Frontend (UI) build for S3 |
+
+> [!NOTE]
+> **For `dist.zip` (Frontend):** After downloading, **extract** the zip file and upload **the contents inside** (not the zip itself) to your S3 WebUI bucket. The S3 bucket for the frontend will be created in **[5.2.3. Create S3](../5.2.3-create-s3/)**.
+>
+> **For the Lambda `.zip` files:** These are uploaded directly (without extracting) when deploying each Lambda function in the corresponding sections.
+
 
 **3. Google Gemini API Key**
 
@@ -35,3 +47,7 @@ For the system to automatically analyze error logs via AI, you need to provide a
 **Step 3:** Copy the generated key string. Save this key in a safe place (like Notepad) to fill in the AWS Lambda environment variables configuration in the next practice sections.
 
 ![Copy API Key](/images/5-Workshop/5.2-Prerequisite/5.2.1-tools-and-api/3-copy-api-key.png?featherlight=false&width=90pc)
+
+---
+
+The tools and API Key preparation is complete. Next, we will move on to **[5.2.2. Create VPC](../5.2.2-create-vpc/)** to build the private network infrastructure for the system.

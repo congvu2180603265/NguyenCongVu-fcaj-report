@@ -1,6 +1,6 @@
 ---
 title : "Khởi tạo S3"
-date : 2026-07-10
+date : 2026-06-13
 weight : 4
 chapter : false
 pre : " <b> 5.2.4. </b> "
@@ -21,7 +21,7 @@ Tên bucket S3 phải là duy nhất. Nếu các tên trong hướng dẫn đã 
 
 ---
 
-### Bước 1: Tạo bucket Web UI
+**Bước 1:** Tạo bucket Web UI
 
 Đăng nhập **AWS Management Console**, mở **Amazon S3**, sau đó chọn **Create bucket**.
 
@@ -41,7 +41,7 @@ Giữ các thiết lập còn lại theo mặc định và chọn **Create bucke
 
 ---
 
-### Bước 2: Tải mã nguồn frontend lên S3
+**Bước 2:** Tải mã nguồn frontend lên S3
 
 Mở bucket `playwright-webui-12`, chọn **Upload**, rồi tải toàn bộ nội dung bên trong thư mục build `dist` lên thư mục gốc của bucket. Không tải chính thư mục `dist` làm thư mục cha.
 
@@ -58,7 +58,7 @@ index.html
 
 ---
 
-### Bước 3: Cấu hình static website hosting
+**Bước 3:** Cấu hình static website hosting
 
 Trong bucket Web UI, mở:
 
@@ -86,7 +86,7 @@ Không public bucket báo cáo. Với môi trường production, nên giữ buck
 
 ---
 
-### Bước 4: Tạo bucket lưu báo cáo
+**Bước 4:** Tạo bucket lưu báo cáo
 
 Quay lại danh sách S3 bucket, chọn **Create bucket** và cấu hình:
 
@@ -104,7 +104,7 @@ Giữ các thiết lập còn lại theo mặc định và chọn **Create bucke
 
 ---
 
-### Bước 5: Tạo cấu trúc lưu trữ báo cáo
+**Bước 5:** Tạo cấu trúc lưu trữ báo cáo
 
 Mở bucket `playwright-report-2026` và tạo các thư mục:
 
@@ -121,7 +121,7 @@ Các thư mục này lần lượt lưu kết quả JSON, báo cáo HTML, ảnh 
 
 ---
 
-### Bước 6: Kiểm tra kết quả
+**Bước 6:** Kiểm tra kết quả
 
 Quay lại **Amazon S3 → Buckets** và xác nhận hai bucket đã được tạo trong `ap-southeast-1`:
 

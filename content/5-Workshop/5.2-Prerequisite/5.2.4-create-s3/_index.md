@@ -1,6 +1,6 @@
 ---
 title : "Create Amazon S3 Buckets"
-date : 2026-07-10
+date : 2026-06-13
 weight : 4
 chapter : false
 pre : " <b> 5.2.4. </b> "
@@ -8,161 +8,44 @@ pre : " <b> 5.2.4. </b> "
 
 #### Create Amazon S3 Buckets
 
-In this section, you will create two Amazon S3 buckets that will be used throughout the Playwright Test Automation system.
+In this section, we will create two S3 buckets in the **Asia Pacific (Singapore) (`ap-southeast-1`)** Region:
 
-The first bucket is used to store test reports generated after each execution. The second bucket hosts the static frontend website that users use to submit test requests and view execution results.
+| Bucket | Purpose |
+|---|---|
+| `playwright-webui-12` | Stores the Dashboard Console frontend files |
+| `playwright-report-2026` | Stores reports, screenshots, and test result data |
 
-Amazon S3 provides highly durable object storage and serves as the central storage service for reports, screenshots, JSON files, and frontend resources.
-
-After completing this section, the two buckets will be used for the following purposes:
-
-- Store HTML and JSON reports.
-- Store Playwright screenshots.
-- Store Playwright test scripts.
-- Host the static frontend website.
-- Integrate with Amazon CloudFront in later chapters.
+{{% notice note %}}
+S3 bucket names must be globally unique. If the names in this guide are already taken, add your own suffix and use that same name in later configuration steps.
+{{% /notice %}}
 
 ---
 
-## Step 1: Open Amazon S3
+**Step 1:** Create the Web UI bucket
 
-Sign in to the **AWS Management Console**.
-
-In the search bar, enter:
-
-```text
-Amazon S3
-```
-
-Choose **Amazon S3**, then select **Create bucket**.
-
----
-
-## Step 2: Create Report Bucket
-
-Configure the following information.
-
-| Property | Value |
-|-----------|-------|
-| AWS Region | Asia Pacific (Singapore) |
-| Bucket type | General purpose |
-| Bucket name | `playwright-report-2026` |
-
-Leave all remaining settings as default.
-
-Choose
-
-```text
-Create bucket
-```
-
-![Create Report Bucket](/images/5-Prerequisite/5.2-create-s3/create-report-bucket.png?featherlight=false&width=90pc)
-
-The report bucket stores all files generated during Playwright test execution, including HTML reports, screenshots, JSON files, and uploaded test scripts.
-
----
-
-## Step 3: Create Web UI Bucket
-
-Create another bucket with the following configuration.
-
-| Property | Value |
-|-----------|-------|
-| AWS Region | Asia Pacific (Singapore) |
-| Bucket type | General purpose |
-| Bucket name | `playwright-webui-12` |
-
-Leave the remaining settings unchanged.
-
-Choose
-
-```text
-Create bucket
-```
-
-![Create WebUI Bucket](/images/5-Prerequisite/5.2-create-s3/create-webui-bucket.png?featherlight=false&width=90pc)
-
-This bucket hosts the frontend application that users access through Amazon CloudFront.
-
----
-
-## Step 4: Enable Static Website Hosting
-
-Open the bucket
-
-```text
-playwright-webui-12
-```
-
-Choose
-
-```text
-Properties
-→ Static website hosting
-→ Edit
-```
+Sign in to the **AWS Management Console**, open **Amazon S3**, then select **Create bucket**.
 
 Configure:
 
 | Property | Value |
-|-----------|-------|
-| Static website hosting | Enable |
-| Hosting type | Host a static website |
-| Index document | index.html |
+|---|---|
+| AWS Region | `ap-southeast-1` |
+| Bucket type | `General purpose` |
+| Bucket namespace | `Global namespace` |
+| Bucket name | `playwright-webui-12` |
+| Object Ownership | `ACLs disabled` |
 
-Choose
+Leave the remaining settings as default and select **Create bucket**.
 
-```text
-Save changes
-```
-
-![Enable Static Website Hosting](/images/5-Prerequisite/5.2-create-s3/edit-static.png?featherlight=false&width=90pc)
-
-Static Website Hosting allows Amazon S3 to serve the frontend website through the S3 Website Endpoint before integrating with Amazon CloudFront.
+![Create the Web UI bucket](/images/5-Workshop/5.2-Prerequisite/5.2.4-create-s3/create-webui-bucket.png?featherlight=false&width=90pc)
 
 ---
 
-## Step 5: Upload Initial Files
+**Step 2:** Upload the frontend source to S3
 
-Upload the required project files into each bucket.
+Open bucket `playwright-webui-12`, select **Upload**, then upload the entire contents inside the `dist` build folder to the bucket's root directory. Do not upload the `dist` folder itself as a parent folder.
 
-### Report Bucket
-
-Open
-
-```text
-playwright-report-2026
-```
-
-Upload the following folders.
-
-```text
-json/
-reports/
-screenshots/
-test-scripts/
-```
-
-![Report Bucket Objects](/images/5-Prerequisite/5.2-create-s3/report-bucket-objects.png?featherlight=false&width=90pc)
-
-These folders are used during Playwright execution.
-
-- **json/** stores JSON execution results.
-- **reports/** stores generated HTML reports.
-- **screenshots/** stores failure screenshots.
-- **test-scripts/** stores uploaded Playwright test scripts.
-
----
-
-### Web UI Bucket
-
-Open
-
-```text
-playwright-webui-12
-```
-
-Upload the frontend files.
+After uploading, the bucket should contain `index.html` and the frontend assets, for example:
 
 ```text
 assets/
@@ -171,56 +54,82 @@ icons.svg
 index.html
 ```
 
-![WebUI Bucket Objects](/images/5-Prerequisite/5.2-create-s3/webui-bucket-objects.png?featherlight=false&width=90pc)
-
-These files make up the static frontend website that users will access later through Amazon CloudFront.
+![Files in the Web UI bucket](/images/5-Workshop/5.2-Prerequisite/5.2.4-create-s3/webui-bucket-objects.png?featherlight=false&width=90pc)
 
 ---
 
-## Step 6: Verify the Buckets
+**Step 3:** Configure static website hosting
 
-Return to
-
-```text
-Amazon S3
-→ Buckets
-```
-
-Verify that the following buckets have been created successfully.
+In the Web UI bucket, open:
 
 ```text
-playwright-report-2026
-playwright-webui-12
+Properties
+→ Static website hosting
+→ Edit
 ```
 
-![Verify Buckets](/images/5-Prerequisite/5.2-create-s3/verify-buckets.png?featherlight=false&width=90pc)
+Select:
 
-Also verify that:
+| Property | Value |
+|---|---|
+| Static website hosting | `Enable` |
+| Hosting type | `Host a static website` |
+| Index document | `index.html` |
 
-- The report bucket contains the required folders.
-- The Web UI bucket contains the frontend files.
-- Static Website Hosting has been enabled successfully.
+If the frontend is a SPA, you can set **Error document** to `index.html` as well. Then select **Save changes**.
+
+![Enable static website hosting](/images/5-Workshop/5.2-Prerequisite/5.2.4-create-s3/edit-static.png?featherlight=false&width=90pc)
+
+{{% notice warning %}}
+Do not make the report bucket public. For a production environment, keep the Web UI bucket private and let CloudFront access it via Origin Access Control (OAC). When using OAC, use the S3 bucket origin instead of the S3 website endpoint.
+{{% /notice %}}
 
 ---
 
-## Expected Result
+**Step 4:** Create the report bucket
 
-After completing this section, the Amazon S3 environment should have the following structure.
+Go back to the S3 bucket list, select **Create bucket** and configure:
+
+| Property | Value |
+|---|---|
+| AWS Region | `ap-southeast-1` |
+| Bucket type | `General purpose` |
+| Bucket namespace | `Global namespace` |
+| Bucket name | `playwright-report-2026` |
+| Block Public Access | Keep all options enabled |
+
+Leave the remaining settings as default and select **Create bucket**.
+
+![Create the report bucket](/images/5-Workshop/5.2-Prerequisite/5.2.4-create-s3/create-report-bucket.png?featherlight=false&width=90pc)
+
+---
+
+**Step 5:** Create the report storage structure
+
+Open bucket `playwright-report-2026` and create the following folders:
 
 ```text
-playwright-report-2026
-│
-├── json/
-├── reports/
-├── screenshots/
-└── test-scripts/
-
-playwright-webui-12
-│
-├── assets/
-├── favicon.svg
-├── icons.svg
-└── index.html
+json/
+reports/
+screenshots/
+test-scripts/
 ```
 
-The **playwright-report-2026** bucket is used to store reports generated by Lambda Post-processing, while the **playwright-webui-12** bucket hosts the frontend application and will later be connected to Amazon CloudFront for public access.
+These folders store JSON results, HTML reports, test screenshots, and test scripts, respectively.
+
+![Report bucket structure](/images/5-Workshop/5.2-Prerequisite/5.2.4-create-s3/report-bucket-objects.png?featherlight=false&width=90pc)
+
+---
+
+**Step 6:** Verify the result
+
+Go back to **Amazon S3 → Buckets** and confirm both buckets were created in `ap-southeast-1`:
+
+```text
+playwright-webui-12
+playwright-report-2026
+```
+
+![Confirm the buckets were created](/images/5-Workshop/5.2-Prerequisite/5.2.4-create-s3/verify-buckets.png?featherlight=false&width=90pc)
+
+Once done, the Web UI bucket is ready for the CloudFront configuration step, and the report bucket is ready for Lambda to store test results.

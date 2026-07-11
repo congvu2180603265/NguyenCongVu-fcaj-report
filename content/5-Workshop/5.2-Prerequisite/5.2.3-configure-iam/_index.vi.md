@@ -1,163 +1,180 @@
 ---
 title : "Cấu hình IAM"
-date : 2024-01-01 
+date : 2026-06-13
 weight : 3
 chapter : false
 pre : " <b> 5.2.3. </b> "
 ---
+
+#### Cấu hình IAM Role cho Lambda và ECS
+
+Trong phần này, chúng ta sẽ tạo bốn IAM Role cho hệ thống kiểm thử Playwright:
+
+| IAM Role | Trusted service | Mục đích |
+|---|---|---|
+| `playwright-lambda-role` | AWS Lambda | Cho phép Lambda điều phối ECS và xử lý kết quả |
+| `playwright-postprocessing-role` | AWS Lambda | Role riêng cho Lambda `playwright-postprocessing`, tách biệt để kiểm soát quyền gọi Secrets Manager và SES chặt chẽ hơn |
+| `playwright-ecs-execution-role` | ECS Tasks | Cho phép ECS tải image từ ECR và ghi log |
+| `playwright-ecs-task-role` | ECS Tasks | Cấp quyền cho ứng dụng bên trong container |
+
+{{% notice warning %}}
+Tuân thủ nguyên tắc cấp quyền tối thiểu (least privilege). Các policy `FullAccess` xuất hiện trong ảnh chụp chỉ phù hợp cho mục đích minh họa workshop. Không cấp `IAMFullAccess` cho Lambda hoặc ECS task trong môi trường thực tế.
+{{% /notice %}}
+
 ---
-title: "5.2.3 Configure IAM Roles"
-weight: 23
----
 
-# Configure IAM Roles
+**Bước 1:** Tạo Lambda execution role
 
-Trong bước này, chúng ta sẽ tạo các IAM Role cần thiết để các dịch vụ trong hệ thống có thể tương tác với nhau một cách an toàn mà không cần sử dụng Access Key.
+Mở **AWS Management Console**, tìm **IAM**, sau đó chọn:
 
-Hệ thống sử dụng ba IAM Role chính:
-
-- **playwright-lambda-role**: Cho phép các hàm Lambda truy cập các dịch vụ AWS như ECS, DynamoDB, SQS, S3, SES, CloudWatch Logs và Secrets Manager.
-- **playwright-ecs-execution-role**: Cho phép ECS Fargate tải Docker Image từ Amazon ECR và ghi log lên CloudWatch.
-- **playwright-ecs-task-role**: Cho phép container Playwright truy cập Amazon S3 và CloudWatch Logs trong quá trình thực thi.
-
----
-
-# 1. Tạo Lambda Role
-
-Truy cập:
-
-```
-AWS Console
-→ IAM
-→ Roles
+```text
+Roles
 → Create role
 ```
 
-Chọn:
+Chọn **AWS service** làm trusted entity và chọn use case **Lambda**.
 
-- Trusted entity type: **AWS Service**
-- Service: **Lambda**
+Đặt tên role:
 
-Đặt tên Role:
-
-```
+```text
 playwright-lambda-role
 ```
 
-![](create-lambda-role.png)
+![Tạo Lambda role](/images/5-Workshop/5.2-Prerequisite/5.2.3-configure-iam/1-create-lambda-role.png?featherlight=false&width=90pc)
+
+Lambda xử lý hậu kỳ (post-processing) cần các nhóm quyền sau:
+
+- Ghi log lên CloudWatch Logs.
+- Đọc trạng thái ECS task.
+- Đọc log ECS task.
+- Đọc và ghi báo cáo trong `playwright-report-2026`.
+- Cập nhật bảng DynamoDB của workshop.
+- Đọc secret `playwright/openai-api-key`.
+- Gửi email qua Amazon SES.
+
+![Policy cho Lambda role](/images/5-Workshop/5.2-Prerequisite/5.2.3-configure-iam/2-lambda-role-created.png?featherlight=false&width=90pc)
+
+{{% notice note %}}
+Với môi trường production, hãy thay các policy `FullAccess` của AWS bằng policy tùy chỉnh giới hạn theo action và resource ARN cụ thể. Secrets Manager chỉ cần quyền `secretsmanager:GetSecretValue`; không cần dùng `SecretsManagerReadWrite`.
+{{% /notice %}}
+
+Kiểm tra trust policy có chứa service principal `lambda.amazonaws.com`, sau đó chọn **Create role**.
 
 ---
 
-## Gán quyền cho Lambda Role
+**Bước 2:** Tạo role riêng cho Lambda Post-processing
 
-Gán các AWS Managed Policies sau:
+Ngoài `playwright-lambda-role` dùng chung ở Bước 1, Lambda `playwright-postprocessing` sử dụng **một role riêng** — vì hàm này gọi Secrets Manager để lấy AI API Key và gọi SES để gửi email nhiều hơn các Lambda khác trong hệ thống, nên tách riêng để dễ kiểm soát và thu hẹp quyền sau này.
 
-- AmazonDynamoDBFullAccess
-- AmazonECS_FullAccess
-- AmazonS3FullAccess
-- AmazonSESFullAccess
-- AmazonSQSFullAccess
-- CloudWatchLogsFullAccess
-- IAMFullAccess
-- SecretsManagerReadWrite
+Tạo thêm một role mới, chọn:
 
-![](lambda-role-policies.png)
+| Thuộc tính | Giá trị |
+|---|---|
+| Trusted entity type | `AWS service` |
+| Service or use case | `Lambda` |
 
-Sau khi hoàn tất, chọn **Create role**.
+Gắn các nhóm quyền tương tự Bước 1 (CloudWatch Logs, DynamoDB, Secrets Manager, S3, SES).
 
-![](lambda-role-created.png)
+Đặt tên role:
+
+```text
+playwright-postprocessing-role
+```
+
+![Role playwright-postprocessing-role đã được tạo](/images/5-Workshop/5.2-Prerequisite/5.2.3-configure-iam/2b-postprocessing-role-created.jpeg?featherlight=false&width=90pc)
+
+{{% notice note %}}
+Ghi lại ARN của role này (dạng `arn:aws:iam::<account-id>:role/playwright-postprocessing-role`) — sẽ dùng để gắn cho Lambda `playwright-postprocessing` ở mục 5.7, thay vì `playwright-lambda-role`.
+{{% /notice %}}
+
+Kiểm tra trust policy có chứa service principal `lambda.amazonaws.com`, sau đó chọn **Create role**.
 
 ---
 
-# 2. Tạo ECS Execution Role
+**Bước 3:** Tạo ECS task execution role
 
-Tiếp tục chọn:
+Tạo thêm một role khác và chọn:
 
+| Thuộc tính | Giá trị |
+|---|---|
+| Trusted entity type | `AWS service` |
+| Service or use case | `Elastic Container Service` |
+| Use case | `Elastic Container Service Task` |
+
+![Chọn ECS Tasks làm trusted service](/images/5-Workshop/5.2-Prerequisite/5.2.3-configure-iam/3-create-ecs-execution-role.png?featherlight=false&width=90pc)
+
+Gắn AWS managed policy sau:
+
+```text
+AmazonECSTaskExecutionRolePolicy
 ```
-Create role
-```
 
-Chọn:
+Policy này cho phép ECS agent tải image từ Amazon ECR và gửi log container lên CloudWatch Logs.
 
-- AWS Service
-- Elastic Container Service
-- Elastic Container Service Task
+![Policy cho ECS execution role](/images/5-Workshop/5.2-Prerequisite/5.2.3-configure-iam/4-ecs-execution-role-created.png?featherlight=false&width=90pc)
 
-Đặt tên:
+Đặt tên role:
 
-```
+```text
 playwright-ecs-execution-role
 ```
 
-![](create-ecs-execution-role.png)
+![Đặt tên ECS execution role](/images/5-Workshop/5.2-Prerequisite/5.2.3-configure-iam/5-playwright-ecs-execution-role.png?featherlight=false&width=90pc)
 
-Role này sử dụng policy mặc định:
-
-- AmazonECSTaskExecutionRolePolicy
-
-Sau đó chọn **Create role**.
-
-![](ecs-execution-role-created.png)
+Kiểm tra trust policy dùng service principal `ecs-tasks.amazonaws.com`, sau đó chọn **Create role**.
 
 ---
 
-# 3. Tạo ECS Task Role
+**Bước 4:** Tạo ECS task role
 
-Tiếp tục tạo thêm một IAM Role mới.
+Tạo thêm một role khác với cùng trusted service:
 
-Chọn:
-
-- AWS Service
-- Elastic Container Service
-- Elastic Container Service Task
-
-Đặt tên:
-
+```text
+Elastic Container Service Task
 ```
+
+![Tạo ECS task role](/images/5-Workshop/5.2-Prerequisite/5.2.3-configure-iam/6-ecs-task-role-created.png?featherlight=false&width=90pc)
+
+Ứng dụng Playwright bên trong container sử dụng task role này. Chỉ cấp đúng những quyền ứng dụng thực sự cần, ví dụ:
+
+- Đọc test script từ report bucket.
+- Ghi báo cáo, ảnh chụp và kết quả vào các prefix bucket cần thiết.
+- Ghi log ứng dụng nếu ứng dụng gọi trực tiếp CloudWatch Logs.
+
+Ảnh chụp workshop minh họa việc chọn policy S3 và CloudWatch Logs:
+
+![Policy cho ECS task role](/images/5-Workshop/5.2-Prerequisite/5.2.3-configure-iam/7-create-ecs-task-role.png?featherlight=false&width=90pc)
+
+Đặt tên role:
+
+```text
 playwright-ecs-task-role
 ```
 
-![](create-ecs-task-role.png)
+![Đặt tên ECS task role](/images/5-Workshop/5.2-Prerequisite/5.2.3-configure-iam/8-ecs-task-role-policies.png?featherlight=false&width=90pc)
+
+Sau đó chọn **Create role**.
 
 ---
 
-## Gán quyền cho ECS Task
+**Bước 5:** Kiểm tra các role
 
-Role này sẽ được container Playwright sử dụng trong quá trình chạy.
+Quay lại **IAM → Roles** và xác nhận cả bốn role đã tồn tại:
 
-Gán các quyền:
+```text
+playwright-lambda-role
+playwright-postprocessing-role
+playwright-ecs-execution-role
+playwright-ecs-task-role
+```
 
-- AmazonS3FullAccess
-- CloudWatchLogsFullAccess
+![Danh sách IAM role đã tạo](/images/5-Workshop/5.2-Prerequisite/5.2.3-configure-iam/9-lambda-role-policies.png?featherlight=false&width=90pc)
 
-![](ecs-task-role-policies.png)
+Khi tạo ECS task definition ở bước sau, cấu hình:
 
-Sau khi hoàn tất, chọn **Create role**.
+| Trường | IAM role |
+|---|---|
+| Task execution role | `playwright-ecs-execution-role` |
+| Task role | `playwright-ecs-task-role` |
 
-![](ecs-task-role-created.png)
-
----
-
-# 4. Kiểm tra kết quả
-
-Sau khi hoàn thành, trong danh sách IAM Roles sẽ xuất hiện ba Role vừa tạo:
-
-- playwright-lambda-role
-- playwright-ecs-execution-role
-- playwright-ecs-task-role
-
-![](iam-roles-overview.png)
-
----
-
-## Kết quả
-
-Hoàn thành bước này, hệ thống đã có đầy đủ IAM Role phục vụ cho:
-
-| IAM Role | Chức năng |
-|----------|-----------|
-| playwright-lambda-role | Cho phép Lambda truy cập các dịch vụ AWS |
-| playwright-ecs-execution-role | Cho phép ECS tải image từ Amazon ECR và ghi CloudWatch Logs |
-| playwright-ecs-task-role | Cho phép container Playwright truy cập S3 và CloudWatch Logs |
-
-Các IAM Role này sẽ được sử dụng ở các bước tiếp theo khi cấu hình ECS Task Definition và Lambda Functions.
+Hàm Lambda `playwright-postprocessing` sử dụng **`playwright-postprocessing-role`** làm execution role (không dùng `playwright-lambda-role` dùng chung). Các Lambda còn lại (`playwright-api-backend`, `playwright-coordinator`, `playwright-error-handler`) tiếp tục dùng `playwright-lambda-role`.

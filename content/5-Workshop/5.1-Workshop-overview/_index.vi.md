@@ -1,6 +1,6 @@
 ---
 title : "Giới thiệu"
-date : 2024-01-01 
+date : 2026-07-10
 weight : 1
 chapter : false
 pre : " <b> 5.1. </b> "
@@ -23,3 +23,7 @@ Trong workshop này, bạn sẽ xây dựng và triển khai một nền tảng 
 - **“AI Support & Notification”** sử dụng AWS Lambda để xử lý và làm sạch dữ liệu log trước khi gửi đến Google Gemini (External AI API) nhằm phân tích, tóm tắt kết quả và hỗ trợ xác định nguyên nhân lỗi. Sau khi hoàn tất, hệ thống tự động gửi email báo cáo thông qua Amazon SES kèm liên kết tải báo cáo trên Amazon S3, đồng thời vẫn đảm bảo gửi báo cáo ngay cả khi dịch vụ AI tạm thời không khả dụng.
 
 ![Architecture](/images/5-Workshop/5.1-Workshop-overview/Architecture.png?featherlight=false&width=90pc)
+
+---
+
+Tiếp theo, chúng ta sẽ chuyển sang **[5.2. Chuẩn bị](../5.2-Prerequisite/)** để thiết lập các công cụ và hạ tầng cần thiết.

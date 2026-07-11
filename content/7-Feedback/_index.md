@@ -1,6 +1,6 @@
 ﻿---
 title: "Contact and Feedback"
-date: 2024-01-01
+date: 2026-07-10
 weight: 7
 chapter: false
 pre: " <b> 7. </b> "
@@ -31,7 +31,3 @@ Use this space for free-form feedback.
 - GitHub: [congvu2180603265](https://github.com/congvu2180603265)
 - Add email, LinkedIn, or other links when you are ready
 
----
-
-### Extra Notes
-- You can also use this page for a simple contact form later
