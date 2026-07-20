@@ -32,6 +32,3 @@ This worklog records my weekly learning progress during the AWS First Cloud Jour
 
 **Week 12:** [Infrastructure deployment, DynamoDB, VPC Endpoints, and SES](1.12-week12/)
 
-**Week 13:** [Personal site setup and avatar update](1.13-week13/)
-
-**Week 14:** [Publish and final check](1.14-week14/)
