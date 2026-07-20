@@ -34,6 +34,6 @@ Original article link: [aws.amazon.com/blogs/aws/proactively-reduce-tech-debt-au
 {{% notice tip %}}
 Screenshot of this post shared on the AWS Study Group Facebook group here.
 {{% /notice %}}
-![Facebook post screenshot](/images/anhblog3.png)
+![Facebook post screenshot](/images/3-BlogsPosted/anhblog3.png)
 
 #AWS #AWSTransform #TechnicalDebt #DevOps #AIAgent #CloudModernization

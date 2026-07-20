@@ -34,6 +34,6 @@ Link bài viết gốc: [aws.amazon.com/blogs/aws/proactively-reduce-tech-debt-a
 {{% notice tip %}}
 Ảnh chụp bài đăng trên nhóm Facebook AWS Study Group để tại đây.
 {{% /notice %}}
-![Facebook post screenshot](/images/anhblog3.png)
+![Facebook post screenshot](/images/3-BlogsPosted/anhblog3.png)
 
 #AWS #AWSTransform #TechnicalDebt #DevOps #AIAgent #CloudModernization

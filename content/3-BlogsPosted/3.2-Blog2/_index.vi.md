@@ -49,6 +49,6 @@ Link bài viết gốc: [aws.amazon.com/blogs/apn/ai-powered-test-automation-wit
 {{% notice tip %}}
 Ảnh chụp bài đăng trên nhóm Facebook AWS Study Group để tại đây.
 {{% /notice %}}
-![Facebook post screenshot](/images/anhblog2.png)
+![Facebook post screenshot](/images/3-BlogsPosted/anhblog2.png)
 
 #AWS #AmazonBedrock #Rapise #AutomationTest #QA #DevSecOps

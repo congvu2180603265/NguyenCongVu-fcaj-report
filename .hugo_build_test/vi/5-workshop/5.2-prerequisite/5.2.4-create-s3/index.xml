@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Khởi tạo S3 on Trang cá nhân</title>
+		<link>http://localhost:1313/vi/5-workshop/5.2-prerequisite/5.2.4-create-s3/</link>
+		<description>Recent content in Khởi tạo S3 on Trang cá nhân</description>
+		<generator>Hugo</generator>
+		<language>vi</language>
+		
+		
+		
+		
+			<lastBuildDate></lastBuildDate>
+		
+			<atom:link href="http://localhost:1313/vi/5-workshop/5.2-prerequisite/5.2.4-create-s3/index.xml" rel="self" type="application/rss+xml" />
+	</channel>
+</rss>

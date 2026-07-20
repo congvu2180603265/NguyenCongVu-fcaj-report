@@ -49,6 +49,6 @@ Original article link: [aws.amazon.com/blogs/apn/ai-powered-test-automation-with
 {{% notice tip %}}
 Screenshot of this post shared on the AWS Study Group Facebook group here.
 {{% /notice %}}
-![Facebook post screenshot](/images/anhblog2.png)
+![Facebook post screenshot](/images/3-BlogsPosted/anhblog2.png)
 
 #AWS #AmazonBedrock #Rapise #AutomationTest #QA #DevSecOps
