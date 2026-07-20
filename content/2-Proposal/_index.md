@@ -1,153 +1,169 @@
 ---
-title: "Overview"
-date: 2026-06-16
-weight: 1
+title: "Proposal"
+date: 2026-06-19
+weight: 2
 chapter: false
 pre: " <b> 2. </b> "
 ---
 
-# Automated Playwright Testing System Using Docker on AWS
 
-## 1. Project Summary
-The system is an End-to-End (E2E) automated testing platform for websites, built to completely eliminate the need for engineers to manually watch over and run tests every time a deployment change happens. Playwright runs inside a Docker container to simulate real user behavior in the browser (navigation, form input, checking displayed results), after which an AI summarization step turns raw technical logs into easy-to-understand content sent via email.
+# Cloud-Native E2E Testing Platform  
+## An AWS Serverless Solution for Automated End-to-End Testing and Intelligent Report Management.  
 
-The entire system runs on AWS using an event-driven, serverless-first architecture: Amazon EventBridge triggers test runs on a schedule, Amazon SQS decouples request intake from execution, an AWS Lambda function (the Coordinator) spins up an independent Amazon ECS Fargate task for each test run, and that task automatically shuts down once the report is generated. As a result, the system only incurs cost for the minutes actually spent running tests, instead of paying for a server running 24/7 that sits idle most of the time. Access to the admin dashboard is role-based across 3 roles (Admin, QA/Tester, Developer) via Amazon Cognito.
+### 1. Executive Summary  
+This platform is an automated End-to-End (E2E) website testing solution built to completely eliminate the need for QA engineers to manually trigger and monitor test runs whenever new code changes are deployed. Playwright executes inside Docker containers to simulate real user browser behavior (navigation, form inputs, assertion checks), followed by an AI summarization step that distills raw technical logs into human-readable email notifications.
 
-## 2. Problem Statement
+The entire platform operates on AWS following an event-driven, serverless-first architecture: Amazon EventBridge triggers scheduled test executions, Amazon SQS decouples request ingestion from execution, an AWS Lambda function (Coordinator) provisions an isolated Amazon ECS Fargate task for each test run, and the task automatically terminates once report generation is complete. Consequently, the platform only incurs costs for the exact minutes tests are actually running, rather than paying for a 24/7 server sitting idle most of the time. Administrative Dashboard access is controlled via role-based access control (RBAC) across three distinct roles (Admin, QA/Tester, Developer) authenticated through Amazon Cognito.
 
-**Current problem**
-Manual End-to-End testing requires a tester to manually run test scripts every time a change is deployed — this approach doesn't scale as the number of applications and test cases keeps growing. There's no centralized system to schedule tests, track Pass/Fail trends over time, or automatically notify the right stakeholders. Keeping a server running continuously just to be ready for the next test run wastes operating cost, since the server sits idle most of the time.
+### 2. Problem Statement  
+**Current Challenges**  
+Manual End-to-End testing requires QA testers to manually execute test scripts whenever code changes are deployed—an approach that fails to scale as application volume and test suite complexity grow. There is a lack of a centralized system to schedule test runs, track historical Pass/Fail trends, or automatically notify relevant stakeholders. Furthermore, maintaining a 24/7 server solely to stay ready for the next test execution incurs unnecessary operational waste, as the server remains idle for the majority of the time.
 
-**Solution**
-The system accepts two trigger sources — an automated cron schedule (Amazon EventBridge) and a manual on-demand trigger (Amazon API Gateway) — and normalizes both into a single Amazon SQS queue along with a Dead Letter Queue (DLQ) to retain requests that fail processing. An AWS Lambda function (Coordinator) acts as the queue's consumer, calling the RunTask API to spin up a short-lived Amazon ECS Fargate task that runs the Playwright test suite packaged as a Docker image stored in Amazon ECR. Once finished, the task writes an HTML/JSON report to a private Amazon S3 bucket and streams real-time logs to Amazon CloudWatch, then shuts itself down.
+**Proposed Solution**  
+The system ingests execution triggers from two sources: automated cron schedules (Amazon EventBridge) and on-demand manual triggers (Amazon API Gateway). Both sources are normalized into a single Amazon SQS queue, backed by a Dead Letter Queue (DLQ) to capture failed execution requests. An AWS Lambda function (Coordinator) acts as the queue consumer, calling the `RunTask` API to launch a short-lived Amazon ECS Fargate task that runs the Playwright test suite packaged within a Docker image stored in Amazon ECR. Upon completion, the task uploads HTML/JSON reports to a private Amazon S3 bucket, streams real-time execution logs to Amazon CloudWatch, and automatically shuts down.
 
-A post-processing AWS Lambda function reads the raw logs, filters out unnecessary data, and sends it to an external AI API to generate a concise natural-language summary — with a fallback mechanism that still sends the original report via email if the AI call fails or times out. Amazon SES handles sending the final notification email, which includes the Pass/Fail metrics, a time-limited S3 presigned URL, and the AI-generated summary, to the correct list of subscribers registered for that application.
+A Post-processing AWS Lambda function parses raw execution logs, filters out noise, and passes the clean log to an external AI API to generate a concise natural language summary. This step includes a fallback mechanism to ensure the original report is still emailed if the AI invocation fails or times out. Amazon SES handles final email notifications, delivering Pass/Fail metrics, time-limited S3 Presigned URLs, and AI-generated summaries directly to registered application subscribers.
 
-**Benefits and ROI**
-* Eliminates manual test execution: no more manually triggering tests or watching for results.
-* Shortens response time: turns a manual process that could take hours into a single automated run lasting just minutes.
-* Optimizes infrastructure cost: cost scales with actual usage (pay-as-you-go) instead of maintaining a 24/7 server.
-* Full history retention: every run is permanently stored in Amazon DynamoDB, enabling quality-trend analysis that's nearly impossible with scattered Excel-based tracking.
-* Frees up resources: frees up QA time to focus on designing better test scenarios instead of repeating manual checks.
+**Benefits and ROI**  
+* **Elimination of manual testing:** Removes the need to manually initiate or monitor test executions.
+* **Accelerated feedback loops:** Transforms a manual process that could take hours into an automated pipeline completing in minutes.
+* **Cost optimization:** Pay-as-you-go model replaces maintaining round-the-clock server infrastructure.
+* **Comprehensive historical auditing:** Every test run is permanently logged in Amazon DynamoDB for trend analysis—a feat nearly impossible with disparate Excel spreadsheets.
+* **Empowered QA teams:** Frees QA engineers to focus on designing better test scenarios rather than executing repetitive manual checks.
 
-## 3. Solution Architecture
-The system is divided into a Backend Engine (scheduling, executing, and generating test reports) and a Dashboard Console (interface for the 3 roles: Admin, QA/Tester, Developer). Every request goes through exactly one processing flow — no shortcut ever skips the SQS → Lambda Coordinator → Fargate chain, whether triggered on schedule or manually.
+### 3. Solution Architecture  
+The platform is segregated into a Backend Engine (scheduling, execution, and report generation) and a Dashboard Console (management interface for Admin, QA/Tester, and Developer roles). All execution requests strictly follow a single unified pipeline: `SQS -> Lambda Coordinator -> Fargate`, with no shortcuts bypassing this chain whether triggered manually or via schedule.
 
-![Playwright automated testing solution architecture](/images/anhProposal/png)
+![System Architecture Diagram](/images/2-Proposal/architecture.png)
 
-**AWS services used**
+**AWS Services Utilized**
 
-| AWS Service | Role in the architecture |
+| AWS Service | Architectural Role |
 |---|---|
-| Amazon EventBridge | Schedules and generates periodic test events (cron expressions). |
-| Amazon API Gateway (HTTP API) | Accepts manual trigger requests and API calls from the Dashboard, authenticated via a Lambda Authorizer. |
-| Amazon SQS + DLQ | Buffers and normalizes every test request; the DLQ retains repeatedly failing runs. |
-| AWS Lambda (Coordinator) | Consumes the queue and calls ECS RunTask to spin up a Fargate task. |
-| Amazon ECS Fargate | Runs the Docker/Playwright container in a Private Subnet, shutting itself down when done. |
-| Amazon ECR | Stores the Docker image containing the Playwright test runner. |
-| Amazon S3 (2 buckets) | One bucket serves the static Dashboard frontend; one private bucket stores reports and test artifacts. |
-| Amazon CloudWatch | Collects logs and metrics, alerting when a task runs too long or the DLQ backs up. |
-| AWS Lambda (Post-processing) | Cleans up logs, calls the external AI API, prepares notification content. |
-| OpenAI API (outside AWS) | Generates a natural-language log summary (used instead of Amazon Bedrock due to Free Tier limitations). |
-| NAT Gateway (Public Subnet) | Lets the Post-processing Lambda in the Private Subnet call the external AI API. |
-| Amazon SES | Sends the final result email directly to registered recipients. |
-| Amazon DynamoDB | Stores test history, audit logs, and system configuration data. |
-| Amazon CloudFront | Distributes the static Dashboard frontend, paired with WAF at the CLOUDFRONT scope. |
-| Amazon Cognito | Authenticates Dashboard users and issues tokens for role-based access. |
-| AWS Secrets Manager | Stores the AI API key and other sensitive configuration. |
-| Amazon VPC + VPC Endpoints (PrivateLink) | Isolates Fargate in a Private Subnet; internal AWS calls never traverse the public internet. |
-| AWS WAF (CloudFront scope + Regional scope) | Two separate Web ACLs protecting CloudFront and the API Gateway endpoint. |
+| Amazon EventBridge | Schedules and emits recurring test events using cron expressions. |
+| Amazon API Gateway (HTTP API) | Ingests manual execution requests and Dashboard API calls, authenticated via Lambda Authorizer. |
+| Amazon SQS + DLQ | Buffers and normalizes all test execution requests; DLQ stores repeated execution failures. |
+| AWS Lambda (Coordinator) | Consumes queue messages and triggers ECS `RunTask` API calls to launch Fargate tasks. |
+| Amazon ECS Fargate | Executes Docker/Playwright test containers inside a Private Subnet and auto-terminates upon completion. |
+| Amazon ECR | Stores containerized Docker images containing the Playwright test runner. |
+| Amazon S3 (2 Buckets) | One bucket hosts the static Dashboard frontend; one private bucket stores test reports and artifacts. |
+| Amazon CloudWatch | Collects logs, metrics, and triggers alerts for task timeouts or DLQ message backlog. |
+| AWS Lambda (Post-processing) | Cleans logs, calls the external AI API, and formats final notification payloads. |
+| Google Gemini (External to AWS) | Generates natural language summaries from raw execution logs (replaces Amazon Bedrock due to Free Tier limits). |
+| NAT Gateway (Public Subnet) | Enables the Post-processing Lambda within the Private Subnet to reach external AI API endpoints. |
+| Amazon SES | Delivers email notifications directly to registered recipient lists. |
+| Amazon DynamoDB | Persists test execution history, Audit Logs, and system configuration data. |
+| Amazon CloudFront | Distributes the static Dashboard frontend; integrated with CLOUDFRONT-scoped AWS WAF. |
+| Amazon Cognito | Authenticates Dashboard users and issues JSON Web Tokens (JWT) for Role-Based Access Control (RBAC). |
+| AWS Secrets Manager | Securely stores AI API keys and sensitive system credentials. |
+| Amazon VPC + VPC Endpoints (PrivateLink) | Isolates Fargate tasks in Private Subnets; routes internal AWS service calls without touching the public Internet. |
+| AWS WAF (CloudFront + Regional Scopes) | Implements two Web ACLs protecting CloudFront and API Gateway endpoints respectively. |
 
-**Component design**
-* Trigger layer: Both EventBridge and API Gateway push events into the same SQS queue.
-* Execution layer: The Coordinator Lambda spins up an ECS Fargate task for each run; the task pulls the Playwright image from ECR and runs headless inside a Private Subnet.
-* Reporting layer: HTML/JSON reports are stored in a private S3 bucket; logs stream to CloudWatch in real time.
-* AI layer: A second Lambda cleans logs and calls the AI API through a NAT Gateway, with a circuit-breaker mechanism to fall back to the original report if the AI call fails.
-* Notification layer: SES sends emails to the recipients registered for that application, including a time-limited S3 presigned URL.
-* Access layer: Cognito consistently enforces the 3 roles (Admin, QA/Tester, Developer) at the API Gateway boundary.
+**Component Design**
+* **Trigger Layer:** EventBridge and API Gateway push both scheduled and manual requests into a shared SQS queue.
+* **Execution Layer:** Lambda Coordinator launches an isolated ECS Fargate task per test run. Tasks pull Playwright images from ECR and execute headless within Private Subnets.
+* **Reporting Layer:** HTML/JSON reports are saved to a private S3 bucket, while logs stream to CloudWatch in real time.
+* **AI Layer:** A second Lambda cleans raw logs and invokes the external AI API via NAT Gateway, utilizing a circuit-breaker pattern to fallback to original reports if AI calls fail.
+* **Notification Layer:** SES dispatches emails with Pass/Fail metrics and time-limited S3 Presigned URLs to registered application subscribers.
+* **Access Layer:** Cognito consistently enforces RBAC boundaries (Admin, QA/Tester, Developer) at the API Gateway perimeter.
 
-## 4. Technical Implementation
+### 4. Technical Implementation  
+**Implementation Phases**  
+1. *Research & Architecture Design*: Define serverless components and network isolation patterns.
+2. *Cost Estimation & Feasibility Analysis*: Model operational costs against expected execution volume.
+3. *Architecture Refinement*: Optimize component choices for performance and budget constraints.
+4. *Development, Testing, & Deployment*:
+   * **Environment & Container Setup:** Configure IAM/AWS CLI; construct Docker/Playwright runner (`Dockerfile`, `entrypoint.js`, `playwright.config.js`).
+   * **Event Flow & Coordinator:** Provision SQS + DLQ pipelines and deploy Lambda Coordinator to invoke ECS `RunTask`.
+   * **Storage & Monitoring:** Configure S3 buckets (frontend + reports), CloudWatch log groups/alarms, and DynamoDB history tables.
+   * **AI Summarization:** Develop Post-processing Lambda integrated with Secrets Manager for Google Gemini API keys, utilizing circuit-breaker fallbacks.
+   * **Dashboard & Authentication:** Deploy static hosting via CloudFront + S3 and set up Cognito User Pools.
+   * **Security Hardening:** Enforce least-privilege IAM policies and configure VPC Endpoints.
+   * **Integration Testing & Demo:** Execute end-to-end pipeline validation tests.
 
-**Implementation phases**
-The architecture has gone through several rounds of review and is finalized; the team is now in the actual implementation phase, broken down into the following steps:
-1. Environment & Container Setup: Configure IAM/AWS CLI, build the Docker/Playwright runner (Dockerfile, entrypoint.js, playwright.config.js).
-2. Event Flow & Coordinator: Set up SQS + DLQ and the Coordinator Lambda that calls ECS RunTask.
-3. Storage & Monitoring: S3 (frontend + reports), CloudWatch log groups and alarms, DynamoDB table for history and audit logs.
-4. AI Summarization: Post-processing Lambda integrated with Secrets Manager for the OpenAI API key and a circuit-breaker style fallback mechanism.
-5. Dashboard & Access Control: Static hosting via CloudFront + S3, Cognito user pool, Lambda Authorizer, and the 3-role interface (Admin / QA-Tester / Developer).
-6. Security Hardening: Least-privilege IAM policies, VPC Endpoints, and two WAF scopes (CloudFront and Regional).
-7. Integration Testing & Demo: Run an end-to-end test on a self-built demo website (avoiding third-party anti-bot policy issues), validate the full pipeline, and prepare the report.
+**Technical Prerequisites**  
+* **Test Runner:** Node.js, Playwright, multi-stage Docker builds to generate ECR images.
+* **Coordinator Logic:** AWS SDK calls executing ECS `RunTask` triggered by SQS events.
+* **Infrastructure as Code (IaC):** Provision resources via IaC (e.g., AWS CDK / CloudFormation) to ensure environmental reproducibility.
+* **Security Baseline:** Fine-grained IAM roles (avoiding `*FullAccess` wildcards), Secrets Manager for credentials, and VPC Endpoints for private AWS service communication.
 
-**Technical requirements**
-* Test runner: Node.js, Playwright, Docker (multi-stage build) to produce the image pushed to ECR.
-* Coordinator logic: Uses the AWS SDK to call ECS RunTask from a Lambda function triggered by SQS.
-* Infrastructure as Code (IaC): Recommend provisioning resources with IaC (e.g., AWS CDK/CloudFormation) to ensure reproducibility across environments.
-* Security foundation: Scoped IAM roles per component (no *FullAccess policies), Secrets Manager for credentials, and VPC Endpoints for internal service calls.
+### 5. Roadmap & Key Milestones  
+**Phase 1: AWS Foundational Self-Study (Weeks 1 – 8)**  
+Individual self-study period for team members. Although individual paths varied slightly, all members achieved the required technical foundation to execute the workshop topic:
+* **AWS Fundamentals & Security:** IAM (Users, Roles, Policies), VPC & Basic Networking, AWS Secrets Manager.
+* **Compute & Containerization:** Docker, Amazon ECS/Fargate, Amazon ECR.
+* **Serverless & Event Integration:** AWS Lambda, Amazon API Gateway, Amazon EventBridge, Amazon SQS.
+* **Storage & Data Services:** Amazon S3, Amazon DynamoDB, Amazon CloudFront.
+* **Monitoring & User Authentication:** Amazon CloudWatch, Amazon Cognito.
 
-## 5. Roadmap & Milestones
+### Phase 2: Implementation
+| Week | Deliverables & Progress |
+| :--- | :--- |
+| **Week 9** | - Convened team meetings to propose the automated testing project utilizing Playwright, evaluating feasibility, and defining appropriate development strategies.<br>- Finalized the project topic, outlined work distribution plans, and drafted the initial architecture diagram. |
+| **Week 10** | - Conducted joint research and referenced various architectural designs to identify and correct flaws in the initial diagram.<br>- Submitted the first architecture draft to mentors/advisors for review; upon receiving feedback on structural shortcomings, re-evaluated the design and transitioned to a layered architecture approach for enhanced clarity. |
+| **Week 11** | - Refined and finalized the architecture diagram, resolving identified design errors.<br>- Submitted the updated diagram for a second review and received approval.<br>- Formulated execution steps and assigned specific task modules to each team member; members prepared necessary configuration files and codebases for the upcoming deployment phase. |
+| **Week 12** | - Initiated the hands-on implementation phase based on individual module assignments.<br>- Conducted initial integration runs, performed joint debugging, and tested all system workflows to resolve logic errors.<br>- Finalized the functional workshop demo and commenced technical report writing. |
 
-| Week | Milestone | Owner |
+### 6. Budget Estimation  
+The table below details cost estimates generated via the AWS Pricing Calculator (Asia Pacific - Singapore region), assuming ~50 Fargate tasks/day (avg. duration 1 min/task), ~10,000 Lambda invocations/month, 5 Dashboard users (Cognito MAU), and ~4,500 SES emails sent/month:
+
+| AWS Service | Primary Configuration Details (AWS Calculator) | Monthly Cost (USD) |
+|---|---|---:|
+| AWS Fargate | Linux/x86, 50 tasks/day, 1 min/task, 2 GB RAM, 20 GB Ephemeral Storage | $1.88 |
+| AWS Lambda | 10,000 requests/month, 512 MB Ephemeral Storage | $0.00 |
+| Amazon SQS | 0.0045 Million Standard Requests/month | $0.00 |
+| Amazon S3 – Frontend | 1 GB Storage, 50 PUTs, 1,500 GETs/month | $0.03 |
+| Amazon S3 – Reports | 3 GB Storage, 37,500 PUTs, 200 GETs/month | $0.26 |
+| Amazon CloudWatch | 2.2 GB Log Ingested, 1 Dashboard, 3 Standard Alarms, 100 API requests | $1.85 |
+| Amazon DynamoDB (On-Demand) | 1 GB Storage, average item size 5 KB | $1.88 |
+| Amazon VPC – PrivateLink | 3 VPC Interface Endpoints/Region | $0.05 |
+| AWS Secrets Manager | 1 Secret stored 30 days, 1,500 API calls/month | $0.41 |
+| Amazon Cognito | 5 MAU with Advanced Security Features enabled | $0.26 |
+| Amazon CloudFront | 2,000 HTTPS Requests, 1 GB Data Out from Origin, 1 GB Data Out to Internet | $0.11 |
+| Amazon API Gateway (HTTP API) | 0.0075 Million requests/month, 34 KB/request | $0.01 |
+| Amazon SES | 4,500 emails sent via Lambda/month | $0.45 |
+| **Cumulative Subtotal (Calculator)** | — | **$7.19** |
+| NAT Gateway *(Scheduled Creation/Deletion)* | Operates only during scheduled execution windows rather than 24/7 | **$15.045** |
+|Google Gemini AI API| free tier | 0.00 | 
+| **Total Estimated Cost** | — | **$22.24** |
+
+At **$22.24 USD/month**, total annual AWS infrastructure costs are estimated at approximately **$266.82 USD**.
+
+*Important Engineering Note:* NAT Gateway does not support native Start/Stop operations like EC2 instances. To achieve the optimized cost of $15.045 USD/month (compared to ~$43 USD/month for 24/7 continuous operation), an EventBridge Schedule triggers a Lambda function to dynamically create (`CreateNatGateway`) the gateway prior to test execution windows and delete it (`DeleteNatGateway`) upon job completion. The operational trade-off is a 1-to-3 minute provisioning delay while NAT Gateway transitions to an active state, which may introduce latency for off-schedule manual test runs.
+
+### 7. Risk Assessment  
+**Risk Matrix**  
+
+| Risk Factor | Impact Level | Probability |
 |---|---|---|
-| | | |
+| Fargate tasks exceed timeout limits or freeze unexpectedly | Medium | Medium |
+| External AI API unavailable or rate-limited | Low *(Mitigated by Fallback)* | Medium |
+| IAM roles assigned overly permissive rights during development | **High** | Medium |
+| Messages accumulating silently in SQS DLQ without alerts | Medium | Low |
+| Unexpected AWS cost spikes due to NAT Gateway misconfiguration or long CloudWatch log retention | Medium | Low |
+| Latency when QA triggers manual tests outside scheduled NAT Gateway operational windows | Medium | Medium |
+| Target demo website experiences instability (if testing third-party sites) | Medium | Medium |
 
-## 6. Budget Estimation
+**Mitigation Strategies**  
+* Configure CloudWatch Alarms for ECS task execution duration and DLQ queue depth to identify hung or repeating failed tasks early.
+* Enclose external AI API calls behind a circuit-breaker pattern to ensure base Pass/Fail reports send successfully via email regardless of AI availability.
+* Enforce strict least-privilege IAM policies from initial deployment rather than deferring cleanup to post-production.
+* Implement automated `DLQ -> CloudWatch Alarm -> SNS` notification paths to ensure no job failures go unnoticed.
+* Host a dedicated internal demo website rather than relying on third-party live domains to avoid anti-bot blockers or unexpected UI shifts.
+* For off-schedule manual test triggers, perform NAT readiness checks prior to AI API invocation or accept the 1–3 minute startup window (aligned across team workflows).
 
-| AWS Service | Key configuration entered in the Calculator | Cost/month (USD) |
-|---|---|---|
-| AWS Fargate | Linux/x86, 50 tasks/day, 1 min/task, 2 GB RAM, 20 GB ephemeral storage | 1.88 |
-| AWS Lambda | 10,000 requests/month, 512 MB ephemeral storage | 0.00 |
-| Amazon SQS | 0.0045 million standard requests/month | 0.00 |
-| Amazon S3 – Frontend | 1 GB storage, 50 PUT, 1,500 GET/month | 0.03 |
-| Amazon S3 – Reports | 3 GB storage, 37,500 PUT, 200 GET/month | 0.26 |
-| Amazon CloudWatch | 2.2 GB log ingested, 1 dashboard, 3 standard alarms, 100 other API requests | 1.85 |
-| Amazon DynamoDB | On-Demand, 1 GB storage, average item 5 KB | 1.88 |
-| Amazon VPC – PrivateLink | 3 VPC Interface Endpoints/region | 0.05 |
-| AWS Secrets Manager | 1 secret, stored 30 days, 1,500 API calls/month | 0.41 |
-| Amazon Cognito | 5 MAU, Advanced Security Features enabled | 0.26 |
-| Amazon CloudFront | 2,000 HTTPS requests, 1 GB data to origin, 1 GB to internet | 0.11 |
-| Amazon API Gateway | HTTP API, 0.0075 million requests/month, 34 KB/request | 0.01 |
-| Amazon SES | 4,500 emails sent from Lambda/month | 0.45 |
-| **Subtotal (Calculator)** | Services on the AWS Calculator | **7.19** |
-| NAT Gateway | Scheduled create/delete for cost optimization, only runs during the OpenAI API call window | 15.045 |
-| **Total** | Excluding OpenAI API cost | **22.24** |
+**Contingency Plans**  
+* If the external AI provider fails to respond, the system bypasses summarization and sends standard Pass/Fail email reports.
+* If a Fargate task hangs, CloudWatch alarms trigger automated task termination without impacting concurrent executions (tasks remain completely isolated).
+* If AWS expenditure trends upward abnormally, AWS Budget Alerts trigger notifications early enough to adjust log retention policies or NAT operational schedules.
 
-At 22.24 USD/month, the total estimated AWS cost over 12 months is about 266.82 USD (excluding OpenAI API cost, since that's a third-party service outside AWS Pricing Calculator and needs to be added manually based on actual token usage).
+### 8. Expected Outcomes  
+**Technical Enhancements**: 
+* Replaces manual E2E testing with an automated, event-driven pipeline, eliminating persistent idle server infrastructure.
+* Every test execution—whether Pass or Fail—is permanently archived in DynamoDB for historical trend analysis.
+* Fine-grained Role-Based Access Control (Admin / QA-Tester / Developer) is enforced consistently at the API boundary.
 
-{{% notice warning %}}
-Important technical note: NAT Gateway doesn't support Start/Stop like EC2 — to achieve the optimized cost of 15.045 USD/month (instead of about 43 USD/month if run 24/7), the scheduling approach needs to use an EventBridge Schedule combined with a Lambda function to automatically create it (CreateNatGateway) before the needed time window and delete it (DeleteNatGateway) afterward. The trade-off of this approach is that the NAT Gateway takes about 1-3 minutes to become ready after creation, which can cause delays if QA triggers a manual test outside the scheduled window — this trade-off should be clearly stated in the report's risk section.
-{{% /notice %}}
-
-## 7. Risk Assessment
-
-**Risk matrix**
-
-| Risk | Impact | Likelihood |
-|---|---|---|
-| Fargate task runs longer than expected / times out | Medium | Medium |
-| External AI API (OpenAI) unavailable or rate-limited | Low (fallback in place) | Medium |
-| IAM role granted excessive permissions during development | High | Medium |
-| Messages piling up in the DLQ without an alert | Medium | Low |
-| AWS cost exceeding expectations due to NAT misconfiguration or CloudWatch retention settings | Medium | Low |
-| Latency when QA triggers an ad-hoc test outside the scheduled NAT Gateway window | Medium | Medium |
-| Demo website instability (if using a real third-party site) | Medium | Medium |
-
-**Mitigation strategy**
-* Set up CloudWatch Alarms for ECS task duration and DLQ depth to catch stuck or repeatedly failing runs early.
-* Keep the AI summarization step behind a circuit-breaker so the original report still gets emailed if the AI call fails.
-* Apply least-privilege IAM from the start of implementation, rather than leaving it for a later cleanup phase.
-* Set up the DLQ → CloudWatch Alarm → SNS alert chain early so no failed run silently goes unnoticed.
-* Use a self-built demo website instead of a real third-party domain, to avoid anti-bot issues and unpredictable UI changes.
-* If a test is manually triggered outside the NAT Gateway's scheduled window, the system can check the NAT's status before calling the AI API, or accept a 1-3 minute delay for the NAT to initialize.
-
-**Contingency plan**
-* If the AI provider doesn't respond, the system still sends the original Pass/Fail report via email.
-* If a Fargate task hangs, the CloudWatch alarm triggers and the task can be force-stopped without affecting other runs (each run is isolated independently).
-* If AWS cost trends up abnormally, a budget alert will catch it early enough to adjust log retention or NAT usage.
-
-## 8. Expected Outcomes
-
-**Technical improvements**
-Manual E2E testing is replaced by an automated, event-driven pipeline, with no more idle standing infrastructure. Role-based access (Admin / QA-Tester / Developer) is consistently enforced at the API boundary.
-
-**Long-term value**
-Becomes a reusable reference architecture for the team's future serverless, event-driven projects. Accumulated test history data (DynamoDB) forms the foundation for analyzing recurring failures later on. Demonstrates a clear, usage-based cost model compared to a traditional always-on test server.
+**Long-Term Value**:
+* Establishes a re-usable reference architecture for future serverless and event-driven projects across the organization.
+* Accumulated test history in DynamoDB serves as a foundational dataset for identifying recurring application regressions over time.
+* Demonstrates a clear, usage-based cost model that offers significant savings over traditional, continuously running test servers.
