@@ -1,7 +1,7 @@
 ﻿---
 title: "Worklog Tuần 4"
 date: 2026-05-08
-weight: 1
+weight: 4
 chapter: false
 pre: " <b> 1.4. </b> "
 ---
@@ -25,5 +25,4 @@ Học Module 03 và 04 về Amazon EC2 cùng các dịch vụ lưu trữ; chỉ 
 * Hoàn thành Lab 27 về Tag và Resource Group, hình thành thói quen tổ chức tài nguyên rõ ràng hơn.
 * Phân biệt được object storage, block storage và file storage, đồng thời hiểu trường hợp sử dụng của từng loại.
 * Biết chủ động điều chỉnh tiến độ học, lược bớt các lab nâng cao chưa cần thiết để bám sát mục tiêu tuần.
-
 

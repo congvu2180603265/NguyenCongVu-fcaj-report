@@ -1,7 +1,7 @@
 ﻿---
 title: "Worklog Tuần 5"
 date: 2026-05-15
-weight: 1
+weight: 5
 chapter: false
 pre: " <b> 1.5. </b> "
 ---
@@ -25,5 +25,4 @@ Tập trung vào ba mảng chính của Module 05 là IAM, mã hóa dữ liệu 
 * Hoàn thành Lab 33 và nắm được cách AWS KMS bổ sung lớp bảo vệ cho dữ liệu trên S3.
 * Hoàn thành Lab 08 và biết thiết lập theo dõi cơ bản bằng CloudWatch với Metrics, Logs, Alarm và Dashboard.
 * Chủ động thu gọn phạm vi học để giữ nhịp độ ổn định và chừa thời gian cho Module 06.
-
 

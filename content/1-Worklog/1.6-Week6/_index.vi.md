@@ -1,7 +1,7 @@
 ﻿---
 title: "Worklog Tuần 6"
 date: 2026-05-22
-weight: 1
+weight: 6
 chapter: false
 pre: " <b> 1.6. </b> "
 ---
@@ -26,5 +26,4 @@ Tập trung đào sâu Module 06 về cơ sở dữ liệu, ưu tiên phần RDS
 * Thao tác được DynamoDB bằng cả AWS CLI và Python SDK Boto3.
 * Củng cố lại SQL từ cơ bản đến nâng cao để hỗ trợ tốt hơn cho phần thực hành dữ liệu.
 * Tạo được nền tảng đủ vững cho nhiệm vụ phụ trách DynamoDB trong dự án nhóm.
-
 

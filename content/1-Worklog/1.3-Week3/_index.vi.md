@@ -1,7 +1,7 @@
 ﻿---
 title: "Worklog Tuần 3"
 date: 2026-05-01
-weight: 1
+weight: 3
 chapter: false
 pre: " <b> 1.3. </b> "
 ---
@@ -25,5 +25,4 @@ Tập trung vào các phần nâng cao hơn của Module 02, đặc biệt là D
 * Hiểu rõ hơn cơ chế phân giải DNS nội bộ trong VPC.
 * Sử dụng traceroute để chẩn đoán và khắc phục lỗi định tuyến trong mô hình VPC Peering.
 * Cải thiện khả năng tự tra cứu và xử lý lỗi khi lab không chạy đúng như hướng dẫn mẫu.
-
 
