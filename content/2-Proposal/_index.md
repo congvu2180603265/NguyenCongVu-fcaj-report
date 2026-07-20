@@ -34,7 +34,7 @@ A Post-processing AWS Lambda function parses raw execution logs, filters out noi
 ### 3. Solution Architecture  
 The platform is segregated into a Backend Engine (scheduling, execution, and report generation) and a Dashboard Console (management interface for Admin, QA/Tester, and Developer roles). All execution requests strictly follow a single unified pipeline: `SQS -> Lambda Coordinator -> Fargate`, with no shortcuts bypassing this chain whether triggered manually or via schedule.
 
-![System Architecture Diagram](/images/2-Proposal/architecture.png)
+![System Architecture Diagram](/images/2-Proposal/anhProposal.png)
 
 **AWS Services Utilized**
 

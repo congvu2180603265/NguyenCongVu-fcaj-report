@@ -20,7 +20,7 @@ Set up sign-in, user authorization, and an API gateway for the Frontend to commu
 **Step 2:** Click the orange **Create user pool** button.
 
 **Step 3:** On the **Configure sign-in experience** page: keep Provider types as **Cognito user pool**; under Sign-in options, tick **Email**. Click **Next**.
-![alt text](/images/5-Workshop/5.9-api-gateway-and-auth/1.3.png?featherlight=false&width=90pc)
+![Configure the sign-in experience with email](/images/5-Workshop/5.9-api-gateway-and-auth/1.3-cognito-configure-signin.png?featherlight=false&width=90pc)
 **Step 4:** On the **Configure security requirements** page: under Password policy, select **Cognito defaults**; under Multi-factor authentication, select **No MFA**. Click **Next**.
 
 **Step 5:** On the **Configure sign-up experience** page: under Required attributes for sign-up, tick **email**. Leave the rest at default. Click **Next**.
@@ -51,7 +51,7 @@ Set up sign-in, user authorization, and an API gateway for the Frontend to commu
 **Step 3:** Click **Create group**.
 
 **Step 4:** Enter Group name = `Admin`, leave the other fields blank, click **Create group**.
-![alt text](/images/5-Workshop/5.9-api-gateway-and-auth/2.4.png?featherlight=false&width=90pc)
+![Admin group created](/images/5-Workshop/5.9-api-gateway-and-auth/2.4-group-admin-created.png?featherlight=false&width=90pc)
 
 **Step 5:** Click **Create group** again, enter Group name = `Developer`, click **Create group**.
 
@@ -74,7 +74,7 @@ Set up sign-in, user authorization, and an API gateway for the Frontend to commu
 **Step 3:** Under Invitation message: select **Don't send an invitation**.
 
 **Step 4:** Enter Email address = `Admin-test@gmail.com`, tick **Mark email address as verified** if you want to skip the email verification step (not required for internal test accounts).
-![alt text](/images/5-Workshop/5.9-api-gateway-and-auth/3.4.png?featherlight=false&width=90pc)
+![Enter the details for the Admin-test user](/images/5-Workshop/5.9-api-gateway-and-auth/3.4-create-user-admin-test.png?featherlight=false&width=90pc)
 **Step 5:** Set a Temporary password (or let Cognito generate one), click **Create user**.
 
 **Step 6:** Repeat Steps 2-5 to create user `Dev-test@gmail.com`.
@@ -116,15 +116,15 @@ Set up sign-in, user authorization, and an API gateway for the Frontend to commu
 **Step 2:** In the left-hand menu, click **APIs** → click the orange **Create API** button.
 
 **Step 3:** Under **HTTP API**, click **Build** (don't choose REST API — HTTP API is simpler and sufficient for this workshop).
-![alt text](/images/5-Workshop/5.9-api-gateway-and-auth/5.3.png?featherlight=false&width=90pc)
+![Choose HTTP API to build](/images/5-Workshop/5.9-api-gateway-and-auth/5.3-api-gateway-http-build.png?featherlight=false&width=90pc)
 **Step 4:** On the **Create and configure integrations** page: click **Add integration** → select **Lambda**.
 
 **Step 5:** In the Lambda function dropdown, select `playwright-api-backend`. Set **API name** = `playwright-api`. Click **Next**.
-![alt text](/images/5-Workshop/5.9-api-gateway-and-auth/Screenshot%202026-07-10%20220935.png?featherlight=false&width=90pc)
+![Choose the Lambda integration and name the API](/images/5-Workshop/5.9-api-gateway-and-auth/5.5-api-integration-lambda.png?featherlight=false&width=90pc)
 **Step 6:** On the **Configure routes** page (optional): select Method **POST**, enter Resource path `/trigger`, leave the Integration target as `playwright-api-backend (Lambda)`. Click **Next**.
 
 **Step 7:** On the **Define stages** page (optional): keep the default Stage name = `$default`, Auto-deploy = **enabled**. Click **Next**.
-![alt text](/images/5-Workshop/5.9-api-gateway-and-auth/5.7.png?featherlight=false&width=90pc)
+![Configure the default stage with auto-deploy](/images/5-Workshop/5.9-api-gateway-and-auth/5.7-api-stages-default.png?featherlight=false&width=90pc)
 **Step 8:** On the **Review and create** page, verify all 3 sections: **API name and integrations** (playwright-api, playwright-api-backend), **Routes** (POST /trigger → playwright-api-backend), **Stages** ($default, Auto-deploy: enabled). Click **Create**.
 
 ![Review and create before creating the API](/images/5-Workshop/5.9-api-gateway-and-auth/7a-review-create-api.png?featherlight=false&width=90pc)
