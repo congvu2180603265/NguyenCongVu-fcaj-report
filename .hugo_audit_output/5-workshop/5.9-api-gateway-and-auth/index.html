@@ -1,0 +1,1957 @@
+<!DOCTYPE html>
+<html lang="en" class="js csstransforms3d">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="Hugo 0.164.0">
+    <meta
+  name="description"
+  content=""
+/>
+<meta name="author" content="congvu2180603265" />
+
+    <link rel="icon" href="/NguyenCongVu-fcaj-report/images/favicon.png" type="image/png">
+
+    <title>Auth &amp; API Gateway :: Personal Site</title>
+
+    
+    <link href="/NguyenCongVu-fcaj-report/css/nucleus.css?1784543807" rel="stylesheet">
+    <link href="/NguyenCongVu-fcaj-report/css/fontawesome-all.min.css?1784543807" rel="stylesheet">
+    <link href="/NguyenCongVu-fcaj-report/css/hybrid.css?1784543807" rel="stylesheet">
+    <link href="/NguyenCongVu-fcaj-report/css/featherlight.min.css?1784543807" rel="stylesheet">
+    <link href="/NguyenCongVu-fcaj-report/css/perfect-scrollbar.min.css?1784543807" rel="stylesheet">
+    <link href="/NguyenCongVu-fcaj-report/css/auto-complete.css?1784543807" rel="stylesheet">
+    <link href="/NguyenCongVu-fcaj-report/css/atom-one-dark-reasonable.css?1784543807" rel="stylesheet">
+    <link href="/NguyenCongVu-fcaj-report/css/theme.css?1784543807" rel="stylesheet">
+    <link href="/NguyenCongVu-fcaj-report/css/hugo-theme.css?1784543807" rel="stylesheet">
+    
+    <link href="/NguyenCongVu-fcaj-report/css/theme-workshop.css?1784543807" rel="stylesheet">
+    
+    
+
+    <script src="/NguyenCongVu-fcaj-report/js/jquery-3.3.1.min.js?1784543807"></script>
+
+    <style>
+      :root #header + #content > #left > #rlblock_left{
+          display:none !important;
+      }
+      
+    </style>
+    
+
+  </head>
+  <body class="" data-url="/NguyenCongVu-fcaj-report/5-workshop/5.9-api-gateway-and-auth/">
+    <nav
+  id="sidebar"
+  class="showVisitedLinks"
+>
+   
+  <div id="header-wrapper">
+    <div id="header"><a id="logo" href="/">
+
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 30" width="30%"><defs><style>.cls-1{fill:#fff;}.cls-2{fill:#fff;fill-rule:evenodd;}</style></defs><title>AWS-Logo_White-Color</title><path class="cls-1" d="M14.09,10.85a4.7,4.7,0,0,0,.19,1.48,7.73,7.73,0,0,0,.54,1.19.77.77,0,0,1,.12.38.64.64,0,0,1-.32.49l-1,.7a.83.83,0,0,1-.44.15.69.69,0,0,1-.49-.23,3.8,3.8,0,0,1-.6-.77q-.25-.42-.51-1a6.14,6.14,0,0,1-4.89,2.3,4.54,4.54,0,0,1-3.32-1.19,4.27,4.27,0,0,1-1.22-3.2A4.28,4.28,0,0,1,3.61,7.75,6.06,6.06,0,0,1,7.69,6.46a12.47,12.47,0,0,1,1.76.13q.92.13,1.91.36V5.73a3.65,3.65,0,0,0-.79-2.66A3.81,3.81,0,0,0,7.86,2.3a7.71,7.71,0,0,0-1.79.22,12.78,12.78,0,0,0-1.79.57,4.55,4.55,0,0,1-.58.22l-.26,0q-.35,0-.35-.52V2a1.09,1.09,0,0,1,.12-.58,1.2,1.2,0,0,1,.47-.35A10.88,10.88,0,0,1,5.77.32,10.19,10.19,0,0,1,8.36,0a6,6,0,0,1,4.35,1.35,5.49,5.49,0,0,1,1.38,4.09ZM7.34,13.38a5.36,5.36,0,0,0,1.72-.31A3.63,3.63,0,0,0,10.63,12,2.62,2.62,0,0,0,11.19,11a5.63,5.63,0,0,0,.16-1.44v-.7a14.35,14.35,0,0,0-1.53-.28,12.37,12.37,0,0,0-1.56-.1,3.84,3.84,0,0,0-2.47.67A2.34,2.34,0,0,0,5,11a2.35,2.35,0,0,0,.61,1.76A2.4,2.4,0,0,0,7.34,13.38Zm13.35,1.8a1,1,0,0,1-.64-.16,1.3,1.3,0,0,1-.35-.65L15.81,1.51a3,3,0,0,1-.15-.67.36.36,0,0,1,.41-.41H17.7a1,1,0,0,1,.65.16,1.4,1.4,0,0,1,.33.65l2.79,11,2.59-11A1.17,1.17,0,0,1,24.39.6a1.1,1.1,0,0,1,.67-.16H26.4a1.1,1.1,0,0,1,.67.16,1.17,1.17,0,0,1,.32.65L30,12.39,32.88,1.25A1.39,1.39,0,0,1,33.22.6a1,1,0,0,1,.65-.16h1.54a.36.36,0,0,1,.41.41,1.36,1.36,0,0,1,0,.26,3.64,3.64,0,0,1-.12.41l-4,12.86a1.3,1.3,0,0,1-.35.65,1,1,0,0,1-.64.16H29.25a1,1,0,0,1-.67-.17,1.26,1.26,0,0,1-.32-.67L25.67,3.64,23.11,14.34a1.26,1.26,0,0,1-.32.67,1,1,0,0,1-.67.17Zm21.36.44a11.28,11.28,0,0,1-2.56-.29,7.44,7.44,0,0,1-1.92-.67,1,1,0,0,1-.61-.93v-.84q0-.52.38-.52a.9.9,0,0,1,.31.06l.42.17a8.77,8.77,0,0,0,1.83.58,9.78,9.78,0,0,0,2,.2,4.48,4.48,0,0,0,2.43-.55,1.76,1.76,0,0,0,.86-1.57,1.61,1.61,0,0,0-.45-1.16A4.29,4.29,0,0,0,43,9.22l-2.41-.76A5.15,5.15,0,0,1,38,6.78a3.94,3.94,0,0,1-.83-2.41,3.7,3.7,0,0,1,.45-1.85,4.47,4.47,0,0,1,1.19-1.37A5.27,5.27,0,0,1,40.51.29,7.4,7.4,0,0,1,42.6,0a8.87,8.87,0,0,1,1.12.07q.57.07,1.08.19t.95.26a4.27,4.27,0,0,1,.7.29,1.59,1.59,0,0,1,.49.41.94.94,0,0,1,.15.55v.79q0,.52-.38.52a1.76,1.76,0,0,1-.64-.2,7.74,7.74,0,0,0-3.2-.64,4.37,4.37,0,0,0-2.21.47,1.6,1.6,0,0,0-.79,1.48,1.58,1.58,0,0,0,.49,1.18,4.94,4.94,0,0,0,1.83.92L44.55,7a5.08,5.08,0,0,1,2.57,1.6A3.76,3.76,0,0,1,47.9,11a4.21,4.21,0,0,1-.44,1.93,4.4,4.4,0,0,1-1.21,1.47,5.43,5.43,0,0,1-1.85.93A8.25,8.25,0,0,1,42.05,15.62Z"></path><path class="cls-2" d="M45.19,23.81C39.72,27.85,31.78,30,25,30A36.64,36.64,0,0,1,.22,20.57c-.51-.46-.06-1.09.56-.74A49.78,49.78,0,0,0,25.53,26.4,49.23,49.23,0,0,0,44.4,22.53C45.32,22.14,46.1,23.14,45.19,23.81Z"></path><path class="cls-2" d="M47.47,21.21c-.7-.9-4.63-.42-6.39-.21-.53.06-.62-.4-.14-.74,3.13-2.2,8.27-1.57,8.86-.83s-.16,5.89-3.09,8.35c-.45.38-.88.18-.68-.32C46.69,25.8,48.17,22.11,47.47,21.21Z"></path></svg>
+
+</a>
+</div>
+     <div class="searchbox">
+    <label for="search-by"><i class="fas fa-search"></i></label>
+    <input data-search-input id="search-by" type="search" placeholder="Search...">
+    <span data-search-clear=""><i class="fas fa-times"></i></span>
+</div>
+
+<script type="text/javascript" src="/NguyenCongVu-fcaj-report/js/lunr.min.js?1784543807"></script>
+<script type="text/javascript" src="/NguyenCongVu-fcaj-report/js/auto-complete.js?1784543807"></script>
+<script type="text/javascript">
+    
+        var baseurl = "https:\/\/congvu2180603265.github.io\/NguyenCongVu-fcaj-report\/";
+    
+</script>
+<script type="text/javascript" src="/NguyenCongVu-fcaj-report/js/search.js?1784543807"></script>
+ 
+  </div>
+
+  <div class="highlightable">
+    <ul class="topics">
+               
+<li
+  data-nav-id="/NguyenCongVu-fcaj-report/1-worklog/"
+  title="Worklog"
+  class="dd-item 
+        
+        
+        
+        "
+>
+  <a href="/NguyenCongVu-fcaj-report/1-worklog/">
+     <b> 1. </b> Worklog 
+    <i class="fas fa-check read-icon"></i>
+    
+  </a>
+   
+  <ul>
+          
+            
+<li
+  data-nav-id="/NguyenCongVu-fcaj-report/1-worklog/1.6-week6/"
+  title="Week 6 Worklog"
+  class="dd-item 
+        
+        
+        
+        "
+>
+  <a href="/NguyenCongVu-fcaj-report/1-worklog/1.6-week6/">
+     <b> 1.6. </b> Week 6 Worklog 
+    <i class="fas fa-check read-icon"></i>
+    
+  </a>
+   
+</li>
+    
+            
+<li
+  data-nav-id="/NguyenCongVu-fcaj-report/1-worklog/1.5-week5/"
+  title="Week 5 Worklog"
+  class="dd-item 
+        
+        
+        
+        "
+>
+  <a href="/NguyenCongVu-fcaj-report/1-worklog/1.5-week5/">
+     <b> 1.5. </b> Week 5 Worklog 
+    <i class="fas fa-check read-icon"></i>
+    
+  </a>
+   
+</li>
+    
+            
+<li
+  data-nav-id="/NguyenCongVu-fcaj-report/1-worklog/1.4-week4/"
+  title="Week 4 Worklog"
+  class="dd-item 
+        
+        
+        
+        "
+>
+  <a href="/NguyenCongVu-fcaj-report/1-worklog/1.4-week4/">
+     <b> 1.4. </b> Week 4 Worklog 
+    <i class="fas fa-check read-icon"></i>
+    
+  </a>
+   
+</li>
+    
+            
+<li
+  data-nav-id="/NguyenCongVu-fcaj-report/1-worklog/1.3-week3/"
+  title="Week 3 Worklog"
+  class="dd-item 
+        
+        
+        
+        "
+>
+  <a href="/NguyenCongVu-fcaj-report/1-worklog/1.3-week3/">
+     <b> 1.3. </b> Week 3 Worklog 
+    <i class="fas fa-check read-icon"></i>
+    
+  </a>
+   
+</li>
+    
+            
+<li
+  data-nav-id="/NguyenCongVu-fcaj-report/1-worklog/1.2-week2/"
+  title="Week 2 Worklog"
+  class="dd-item 
+        
+        
+        
+        "
+>
+  <a href="/NguyenCongVu-fcaj-report/1-worklog/1.2-week2/">
+     <b> 1.2. </b> Week 2 Worklog 
+    <i class="fas fa-check read-icon"></i>
+    
+  </a>
+   
+</li>
+    
+            
+<li
+  data-nav-id="/NguyenCongVu-fcaj-report/1-worklog/1.1-week1/"
+  title="Week 1 Worklog"
+  class="dd-item 
+        
+        
+        
+        "
+>
+  <a href="/NguyenCongVu-fcaj-report/1-worklog/1.1-week1/">
+     <b> 1.1. </b> Week 1 Worklog 
+    <i class="fas fa-check read-icon"></i>
+    
+  </a>
+   
+</li>
+    
+            
+<li
+  data-nav-id="/NguyenCongVu-fcaj-report/1-worklog/1.9-week9/"
+  title="Week 9 Worklog"
+  class="dd-item 
+        
+        
+        
+        "
+>
+  <a href="/NguyenCongVu-fcaj-report/1-worklog/1.9-week9/">
+     <b> 1.9. </b> Week 9 Worklog 
+    <i class="fas fa-check read-icon"></i>
+    
+  </a>
+   
+</li>
+    
+            
+<li
+  data-nav-id="/NguyenCongVu-fcaj-report/1-worklog/1.7-week7/"
+  title="Week 7 Worklog"
+  class="dd-item 
+        
+        
+        
+        "
+>
+  <a href="/NguyenCongVu-fcaj-report/1-worklog/1.7-week7/">
+     <b> 1.7. </b> Week 7 Worklog 
+    <i class="fas fa-check read-icon"></i>
+    
+  </a>
+   
+</li>
+    
+            
+<li
+  data-nav-id="/NguyenCongVu-fcaj-report/1-worklog/1.8-week8/"
+  title="Week 8 Worklog"
+  class="dd-item 
+        
+        
+        
+        "
+>
+  <a href="/NguyenCongVu-fcaj-report/1-worklog/1.8-week8/">
+     <b> 1.8. </b> Week 8 Worklog 
+    <i class="fas fa-check read-icon"></i>
+    
+  </a>
+   
+</li>
+    
+            
+<li
+  data-nav-id="/NguyenCongVu-fcaj-report/1-worklog/1.10-week10/"
+  title="Week 10 Worklog"
+  class="dd-item 
+        
+        
+        
+        "
+>
+  <a href="/NguyenCongVu-fcaj-report/1-worklog/1.10-week10/">
+     <b> 1.10. </b> Week 10 Worklog 
+    <i class="fas fa-check read-icon"></i>
+    
+  </a>
+   
+</li>
+    
+            
+<li
+  data-nav-id="/NguyenCongVu-fcaj-report/1-worklog/1.11-week11/"
+  title="Week 11 Worklog"
+  class="dd-item 
+        
+        
+        
+        "
+>
+  <a href="/NguyenCongVu-fcaj-report/1-worklog/1.11-week11/">
+     <b> 1.11. </b> Week 11 Worklog 
+    <i class="fas fa-check read-icon"></i>
+    
+  </a>
+   
+</li>
+    
+            
+<li
+  data-nav-id="/NguyenCongVu-fcaj-report/1-worklog/1.12-week12/"
+  title="Week 12 Worklog"
+  class="dd-item 
+        
+        
+        
+        "
+>
+  <a href="/NguyenCongVu-fcaj-report/1-worklog/1.12-week12/">
+     <b> 1.12. </b> Week 12 Worklog 
+    <i class="fas fa-check read-icon"></i>
+    
+  </a>
+   
+</li>
+     
+  </ul>
+  
+</li>
+           
+<li
+  data-nav-id="/NguyenCongVu-fcaj-report/2-proposal/"
+  title="Proposal"
+  class="dd-item 
+        
+        
+        
+        "
+>
+  <a href="/NguyenCongVu-fcaj-report/2-proposal/">
+     <b> 2. </b> Proposal 
+    <i class="fas fa-check read-icon"></i>
+    
+  </a>
+   
+</li>
+           
+<li
+  data-nav-id="/NguyenCongVu-fcaj-report/3-blogsposted/"
+  title="Blogs Posted"
+  class="dd-item 
+        
+        
+        
+        "
+>
+  <a href="/NguyenCongVu-fcaj-report/3-blogsposted/">
+     <b> 3. </b> Blogs Posted 
+    <i class="fas fa-check read-icon"></i>
+    
+  </a>
+   
+  <ul>
+          
+            
+<li
+  data-nav-id="/NguyenCongVu-fcaj-report/3-blogsposted/3.1-blog1/"
+  title="End-to-End Secrets Security with GitGuardian and AWS Secrets Manager"
+  class="dd-item 
+        
+        
+        
+        "
+>
+  <a href="/NguyenCongVu-fcaj-report/3-blogsposted/3.1-blog1/">
+     <b> 3.1. </b> End-to-End Secrets Security with GitGuardian and AWS Secrets Manager 
+    <i class="fas fa-check read-icon"></i>
+    
+  </a>
+   
+</li>
+    
+            
+<li
+  data-nav-id="/NguyenCongVu-fcaj-report/3-blogsposted/3.2-blog2/"
+  title="AI-Powered Test Automation: A Breakthrough from Amazon Bedrock and Rapise"
+  class="dd-item 
+        
+        
+        
+        "
+>
+  <a href="/NguyenCongVu-fcaj-report/3-blogsposted/3.2-blog2/">
+     <b> 3.2. </b> AI-Powered Test Automation: A Breakthrough from Amazon Bedrock and Rapise 
+    <i class="fas fa-check read-icon"></i>
+    
+  </a>
+   
+</li>
+    
+            
+<li
+  data-nav-id="/NguyenCongVu-fcaj-report/3-blogsposted/3.3-blog3/"
+  title="AWS Transform – When AI Automatically Cleans Up Technical Debt Across Thousands of Repositories"
+  class="dd-item 
+        
+        
+        
+        "
+>
+  <a href="/NguyenCongVu-fcaj-report/3-blogsposted/3.3-blog3/">
+     <b> 3.3. </b> AWS Transform – When AI Automatically Cleans Up Technical Debt Across Thousands of Repositories 
+    <i class="fas fa-check read-icon"></i>
+    
+  </a>
+   
+</li>
+     
+  </ul>
+  
+</li>
+           
+<li
+  data-nav-id="/NguyenCongVu-fcaj-report/4-eventparticipated/"
+  title="Events Participated"
+  class="dd-item 
+        
+        
+        
+        "
+>
+  <a href="/NguyenCongVu-fcaj-report/4-eventparticipated/">
+     <b> 4. </b> Events Participated 
+    <i class="fas fa-check read-icon"></i>
+    
+  </a>
+   
+  <ul>
+          
+            
+<li
+  data-nav-id="/NguyenCongVu-fcaj-report/4-eventparticipated/4.1-event1/"
+  title="FCAJ Community Day"
+  class="dd-item 
+        
+        
+        
+        "
+>
+  <a href="/NguyenCongVu-fcaj-report/4-eventparticipated/4.1-event1/">
+     <b> 4.1. </b> FCAJ Community Day 
+    <i class="fas fa-check read-icon"></i>
+    
+  </a>
+   
+</li>
+     
+  </ul>
+  
+</li>
+           
+<li
+  data-nav-id="/NguyenCongVu-fcaj-report/5-workshop/"
+  title="Workshop"
+  class="dd-item 
+        parent
+        
+        
+        "
+>
+  <a href="/NguyenCongVu-fcaj-report/5-workshop/">
+     <b> 5. </b> Workshop 
+    <i class="fas fa-check read-icon"></i>
+    
+  </a>
+   
+  <ul>
+          
+            
+<li
+  data-nav-id="/NguyenCongVu-fcaj-report/5-workshop/5.1-workshop-overview/"
+  title="Introduction"
+  class="dd-item 
+        
+        
+        
+        "
+>
+  <a href="/NguyenCongVu-fcaj-report/5-workshop/5.1-workshop-overview/">
+     <b> 5.1. </b> Introduction 
+    <i class="fas fa-check read-icon"></i>
+    
+  </a>
+   
+</li>
+    
+            
+<li
+  data-nav-id="/NguyenCongVu-fcaj-report/5-workshop/5.2-prerequisite/"
+  title="Prerequisites"
+  class="dd-item 
+        
+        
+        
+        "
+>
+  <a href="/NguyenCongVu-fcaj-report/5-workshop/5.2-prerequisite/">
+     <b> 5.2. </b> Prerequisites 
+    <i class="fas fa-check read-icon"></i>
+    
+  </a>
+   
+  <ul>
+          
+            
+<li
+  data-nav-id="/NguyenCongVu-fcaj-report/5-workshop/5.2-prerequisite/5.2.1-tools-and-api/"
+  title="Tools &amp; API Key"
+  class="dd-item 
+        
+        
+        
+        "
+>
+  <a href="/NguyenCongVu-fcaj-report/5-workshop/5.2-prerequisite/5.2.1-tools-and-api/">
+     <b> 5.2.1. </b> Tools &amp; API Key 
+    <i class="fas fa-check read-icon"></i>
+    
+  </a>
+   
+</li>
+    
+            
+<li
+  data-nav-id="/NguyenCongVu-fcaj-report/5-workshop/5.2-prerequisite/5.2.2-create-vpc/"
+  title="Create VPC"
+  class="dd-item 
+        
+        
+        
+        "
+>
+  <a href="/NguyenCongVu-fcaj-report/5-workshop/5.2-prerequisite/5.2.2-create-vpc/">
+     <b> 5.2.2. </b> Create VPC 
+    <i class="fas fa-check read-icon"></i>
+    
+  </a>
+   
+</li>
+    
+            
+<li
+  data-nav-id="/NguyenCongVu-fcaj-report/5-workshop/5.2-prerequisite/5.2.3-configure-iam/"
+  title="Configure IAM"
+  class="dd-item 
+        
+        
+        
+        "
+>
+  <a href="/NguyenCongVu-fcaj-report/5-workshop/5.2-prerequisite/5.2.3-configure-iam/">
+     <b> 5.2.3. </b> Configure IAM 
+    <i class="fas fa-check read-icon"></i>
+    
+  </a>
+   
+</li>
+    
+            
+<li
+  data-nav-id="/NguyenCongVu-fcaj-report/5-workshop/5.2-prerequisite/5.2.4-create-s3/"
+  title="Create Amazon S3 Buckets"
+  class="dd-item 
+        
+        
+        
+        "
+>
+  <a href="/NguyenCongVu-fcaj-report/5-workshop/5.2-prerequisite/5.2.4-create-s3/">
+     <b> 5.2.4. </b> Create Amazon S3 Buckets 
+    <i class="fas fa-check read-icon"></i>
+    
+  </a>
+   
+</li>
+    
+            
+<li
+  data-nav-id="/NguyenCongVu-fcaj-report/5-workshop/5.2-prerequisite/5.2.5-create-ecr/"
+  title="Create Amazon ECR Repository"
+  class="dd-item 
+        
+        
+        
+        "
+>
+  <a href="/NguyenCongVu-fcaj-report/5-workshop/5.2-prerequisite/5.2.5-create-ecr/">
+     <b> 5.2.5. </b> Create Amazon ECR Repository 
+    <i class="fas fa-check read-icon"></i>
+    
+  </a>
+   
+</li>
+     
+  </ul>
+  
+</li>
+    
+            
+<li
+  data-nav-id="/NguyenCongVu-fcaj-report/5-workshop/5.3-storage-and-database/"
+  title="Storage &amp; Database"
+  class="dd-item 
+        
+        
+        
+        "
+>
+  <a href="/NguyenCongVu-fcaj-report/5-workshop/5.3-storage-and-database/">
+     <b> 5.3. </b> Storage &amp; Database 
+    <i class="fas fa-check read-icon"></i>
+    
+  </a>
+   
+</li>
+    
+            
+<li
+  data-nav-id="/NguyenCongVu-fcaj-report/5-workshop/5.4-queue-and-endpoints/"
+  title="Queue &amp; VPC Endpoints"
+  class="dd-item 
+        
+        
+        
+        "
+>
+  <a href="/NguyenCongVu-fcaj-report/5-workshop/5.4-queue-and-endpoints/">
+     <b> 5.4. </b> Queue &amp; VPC Endpoints 
+    <i class="fas fa-check read-icon"></i>
+    
+  </a>
+   
+</li>
+    
+            
+<li
+  data-nav-id="/NguyenCongVu-fcaj-report/5-workshop/5.5-docker-image/"
+  title="Docker Image"
+  class="dd-item 
+        
+        
+        
+        "
+>
+  <a href="/NguyenCongVu-fcaj-report/5-workshop/5.5-docker-image/">
+     <b> 5.5. </b> Docker Image 
+    <i class="fas fa-check read-icon"></i>
+    
+  </a>
+   
+</li>
+    
+            
+<li
+  data-nav-id="/NguyenCongVu-fcaj-report/5-workshop/5.6-ecs-cluster/"
+  title="ECS Cluster &amp; Task Definition"
+  class="dd-item 
+        
+        
+        
+        "
+>
+  <a href="/NguyenCongVu-fcaj-report/5-workshop/5.6-ecs-cluster/">
+     <b> 5.6. </b> ECS Cluster &amp; Task Definition 
+    <i class="fas fa-check read-icon"></i>
+    
+  </a>
+   
+</li>
+    
+            
+<li
+  data-nav-id="/NguyenCongVu-fcaj-report/5-workshop/5.7-lambda-functions/"
+  title="Lambda Functions"
+  class="dd-item 
+        
+        
+        
+        "
+>
+  <a href="/NguyenCongVu-fcaj-report/5-workshop/5.7-lambda-functions/">
+     <b> 5.7. </b> Lambda Functions 
+    <i class="fas fa-check read-icon"></i>
+    
+  </a>
+   
+</li>
+    
+            
+<li
+  data-nav-id="/NguyenCongVu-fcaj-report/5-workshop/5.8-secrets-and-notification/"
+  title="Secrets &amp; Notification"
+  class="dd-item 
+        
+        
+        
+        "
+>
+  <a href="/NguyenCongVu-fcaj-report/5-workshop/5.8-secrets-and-notification/">
+     <b> 5.8. </b> Secrets &amp; Notification 
+    <i class="fas fa-check read-icon"></i>
+    
+  </a>
+   
+  <ul>
+          
+            
+<li
+  data-nav-id="/NguyenCongVu-fcaj-report/5-workshop/5.8-secrets-and-notification/5.8.1-secrets-manager/"
+  title="Secrets Manager &amp; AI API Key"
+  class="dd-item 
+        
+        
+        
+        "
+>
+  <a href="/NguyenCongVu-fcaj-report/5-workshop/5.8-secrets-and-notification/5.8.1-secrets-manager/">
+     <b> 5.8.1. </b> Secrets Manager &amp; AI API Key 
+    <i class="fas fa-check read-icon"></i>
+    
+  </a>
+   
+</li>
+    
+            
+<li
+  data-nav-id="/NguyenCongVu-fcaj-report/5-workshop/5.8-secrets-and-notification/5.8.2-notification/"
+  title="SES Email Notification"
+  class="dd-item 
+        
+        
+        
+        "
+>
+  <a href="/NguyenCongVu-fcaj-report/5-workshop/5.8-secrets-and-notification/5.8.2-notification/">
+     <b> 5.8.2 </b> SES Email Notification 
+    <i class="fas fa-check read-icon"></i>
+    
+  </a>
+   
+</li>
+     
+  </ul>
+  
+</li>
+    
+            
+<li
+  data-nav-id="/NguyenCongVu-fcaj-report/5-workshop/5.9-api-gateway-and-auth/"
+  title="Auth &amp; API Gateway"
+  class="dd-item 
+        
+        active
+        
+        "
+>
+  <a href="/NguyenCongVu-fcaj-report/5-workshop/5.9-api-gateway-and-auth/">
+     <b> 5.9. </b> Auth &amp; API Gateway 
+    <i class="fas fa-check read-icon"></i>
+    
+  </a>
+   
+</li>
+    
+            
+<li
+  data-nav-id="/NguyenCongVu-fcaj-report/5-workshop/5.10-frontend/"
+  title="Frontend"
+  class="dd-item 
+        
+        
+        
+        "
+>
+  <a href="/NguyenCongVu-fcaj-report/5-workshop/5.10-frontend/">
+     <b> 5.10. </b> Frontend 
+    <i class="fas fa-check read-icon"></i>
+    
+  </a>
+   
+</li>
+    
+            
+<li
+  data-nav-id="/NguyenCongVu-fcaj-report/5-workshop/5.11-eventbridge/"
+  title="EventBridge"
+  class="dd-item 
+        
+        
+        
+        "
+>
+  <a href="/NguyenCongVu-fcaj-report/5-workshop/5.11-eventbridge/">
+     <b> 5.11. </b> EventBridge 
+    <i class="fas fa-check read-icon"></i>
+    
+  </a>
+   
+</li>
+    
+            
+<li
+  data-nav-id="/NguyenCongVu-fcaj-report/5-workshop/5.12-end-to-end-test/"
+  title="End-to-End Test"
+  class="dd-item 
+        
+        
+        
+        "
+>
+  <a href="/NguyenCongVu-fcaj-report/5-workshop/5.12-end-to-end-test/">
+     <b> 5.12. </b> End-to-End Test 
+    <i class="fas fa-check read-icon"></i>
+    
+  </a>
+   
+</li>
+    
+            
+<li
+  data-nav-id="/NguyenCongVu-fcaj-report/5-workshop/5.13-cleanup/"
+  title="Clean up"
+  class="dd-item 
+        
+        
+        
+        "
+>
+  <a href="/NguyenCongVu-fcaj-report/5-workshop/5.13-cleanup/">
+     <b> 5.13. </b> Clean up 
+    <i class="fas fa-check read-icon"></i>
+    
+  </a>
+   
+</li>
+     
+  </ul>
+  
+</li>
+           
+<li
+  data-nav-id="/NguyenCongVu-fcaj-report/6-self-evaluation/"
+  title="Self-Assessment"
+  class="dd-item 
+        
+        
+        
+        "
+>
+  <a href="/NguyenCongVu-fcaj-report/6-self-evaluation/">
+     <b> 6. </b> Self-Assessment 
+    <i class="fas fa-check read-icon"></i>
+    
+  </a>
+   
+</li>
+           
+<li
+  data-nav-id="/NguyenCongVu-fcaj-report/7-feedback/"
+  title="Feedback and Suggestions"
+  class="dd-item 
+        
+        
+        
+        "
+>
+  <a href="/NguyenCongVu-fcaj-report/7-feedback/">
+     <b> 7. </b> Feedback and Suggestions 
+    <i class="fas fa-check read-icon"></i>
+    
+  </a>
+   
+</li>
+    
+    </ul>
+
+     
+    <section id="shortcuts">
+      <h3>
+        More
+      </h3>
+      <ul>
+        
+        <li>
+          <a class="padding" href="https://github.com/congvu2180603265"
+            ><i class='fab fa-github'></i> GitHub</a
+          >
+        </li>
+        
+      </ul>
+    </section>
+     
+    <section id="prefooter">
+      <hr />
+      <ul>
+        
+        <li>
+          <a class="padding">
+            <i class="fas fa-language fa-fw"></i>
+            <div class="select-style">
+              <select id="select-language" onchange="location = this.value;">
+                       
+                <option
+                  id="en"
+                  value="https://congvu2180603265.github.io/NguyenCongVu-fcaj-report/5-workshop/5.9-api-gateway-and-auth/"
+                  selected
+                >
+                  English
+                </option>
+                            
+                <option
+                  id="vi"
+                  value="https://congvu2180603265.github.io/NguyenCongVu-fcaj-report/vi/5-workshop/5.9-api-gateway-and-auth/"
+                >
+                  Tiếng Việt
+                </option>
+                   
+              </select>
+              <svg
+                version="1.1"
+                id="Capa_1"
+                xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+                x="0px"
+                y="0px"
+                width="255px"
+                height="255px"
+                viewBox="0 0 255 255"
+                style="enable-background: new 0 0 255 255"
+                xml:space="preserve"
+              >
+                <g>
+                  <g id="arrow-drop-down">
+                    <polygon points="0,63.75 127.5,191.25 255,63.75 		" />
+                  </g>
+                </g>
+              </svg>
+            </div>
+          </a>
+        </li>
+         
+        <li>
+          <a class="padding" href="#" data-clear-history-toggle=""
+            ><i class="fas fa-history fa-fw"></i> Clear History</a
+          >
+        </li>
+        
+      </ul>
+    </section>
+    
+    <section id="footer"><left>
+    <br>
+    <br>
+    <b> Last Updated </b> <br>
+    <i>
+        <font color=orange>20-07-2026</font>
+    </i>
+</left>
+<left>
+    <br>
+    <br>
+    <b> GitHub </b> <br>
+    <i>
+        <a href="https://github.com/congvu2180603265" style="color:orange">congvu2180603265</a>
+    </i>
+</left>
+
+<script async defer src="https://buttons.github.io/buttons.js"></script></section>
+  </div>
+</nav>
+
+
+
+
+        <section id="body">
+        <div id="overlay"></div>
+        <div class="padding highlightable">
+              
+              <div>
+                <div id="top-bar">
+                
+                
+                <div id="breadcrumbs" itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb">
+                    <span id="sidebar-toggle-span">
+                        <a href="#" id="sidebar-toggle" data-sidebar-toggle="">
+                          <i class="fas fa-bars"></i>
+                        </a>
+                    </span>
+                  
+                  <span id="toc-menu"><i class="fas fa-list-alt"></i></span>
+                  
+                  <span class="links">
+                 
+                 
+                    
+          
+          
+            
+            
+          
+          
+            
+            
+          
+          
+            <a href='/NguyenCongVu-fcaj-report/'>Personal Site</a> > <a href='/NguyenCongVu-fcaj-report/5-workshop/'>Workshop</a> > Auth & API Gateway
+          
+        
+          
+        
+          
+        
+                 
+                  </span>
+                </div>
+                
+                    <div class="progress">
+  <div class="wrapper"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+</div>
+
+                
+              </div>
+            </div>
+            
+        <div id="head-tags">
+        
+        </div>
+        
+        <div id="body-inner">
+          
+            <h1>
+              
+              Auth &amp; API Gateway
+            </h1>
+          
+
+        
+
+
+
+	<h4 id="introduction">Introduction</h4>
+<p>Set up sign-in, user authorization, and an API gateway for the Frontend to communicate with the Backend.</p>
+<hr>
+<h4 id="part-1-create-a-cognito-user-pool">Part 1: Create a Cognito User Pool</h4>
+<p><strong>Step 1:</strong> Sign in to the <strong>AWS Management Console</strong>, search for <code>Cognito</code> in the search bar, select <strong>Amazon Cognito</strong>.</p>
+<p><strong>Step 2:</strong> Click the orange <strong>Create user pool</strong> button.</p>
+<p><strong>Step 3:</strong> On the <strong>Configure sign-in experience</strong> page: keep Provider types as <strong>Cognito user pool</strong>; under Sign-in options, tick <strong>Email</strong>. Click <strong>Next</strong>.
+<img src="/images/5-Workshop/5.9-api-gateway-and-auth/1.3-cognito-configure-signin.png?featherlight=false&amp;width=90pc" alt="Configure the sign-in experience with email">
+<strong>Step 4:</strong> On the <strong>Configure security requirements</strong> page: under Password policy, select <strong>Cognito defaults</strong>; under Multi-factor authentication, select <strong>No MFA</strong>. Click <strong>Next</strong>.</p>
+<p><strong>Step 5:</strong> On the <strong>Configure sign-up experience</strong> page: under Required attributes for sign-up, tick <strong>email</strong>. Leave the rest at default. Click <strong>Next</strong>.</p>
+<p><strong>Step 6:</strong> On the <strong>Configure message delivery</strong> page: keep the default (Send email with Cognito). Click <strong>Next</strong>.</p>
+<p><strong>Step 7:</strong> On the <strong>Integrate your app</strong> page:</p>
+<ul>
+<li>User pool name: enter <code>playwright-user-pool</code></li>
+<li>Under Initial app client → App type: select <strong>Public client</strong></li>
+<li>App client name: enter <code>playwright-app</code></li>
+</ul>
+<p><strong>Step 8:</strong> Scroll down to <strong>Hosted authentication pages</strong> (if present) or leave at default, don&rsquo;t enable it.</p>
+<p><strong>Step 9:</strong> Under <strong>Callback URL(s)</strong>: temporarily enter <code>http://localhost:3000</code> (this will be updated to the CloudFront Domain Name later, after completing section 5.10).</p>
+<p><strong>Step 10:</strong> Click <strong>Next</strong>, review the full configuration on the <strong>Review and create</strong> page, click <strong>Create user pool</strong>.</p>
+<p><img src="/images/5-Workshop/5.9-api-gateway-and-auth/1-user-pool-created.png?featherlight=false&amp;width=90pc" alt="User pool playwright-user-pool created"></p>
+<hr>
+<h4 id="part-2-create-groups">Part 2: Create Groups</h4>
+<p><strong>Step 1:</strong> From the User Pool you just created (<code>playwright-user-pool</code>), in the left-hand menu, open <strong>User management</strong>.</p>
+<p><strong>Step 2:</strong> Click <strong>Groups</strong>.</p>
+<p><strong>Step 3:</strong> Click <strong>Create group</strong>.</p>
+<p><strong>Step 4:</strong> Enter Group name = <code>Admin</code>, leave the other fields blank, click <strong>Create group</strong>.
+<img src="/images/5-Workshop/5.9-api-gateway-and-auth/2.4-group-admin-created.png?featherlight=false&amp;width=90pc" alt="Admin group created"></p>
+<p><strong>Step 5:</strong> Click <strong>Create group</strong> again, enter Group name = <code>Developer</code>, click <strong>Create group</strong>.</p>
+<p><strong>Step 6:</strong> Click <strong>Create group</strong> again, enter Group name = <code>QA</code>, click <strong>Create group</strong>.</p>
+<p><img src="/images/5-Workshop/5.9-api-gateway-and-auth/2-groups-created.png?featherlight=false&amp;width=90pc" alt="3 groups Admin, Developer, QA created"></p>
+<p><strong>Step 7:</strong> Still in the left-hand menu, open <strong>Applications</strong> → click <strong>App clients</strong>.</p>
+<p><strong>Step 8:</strong> Confirm the App Client <code>playwright-app</code> was already created in Step 7 of Part 1 (Cognito creates it automatically when the User Pool is created). If it&rsquo;s missing, click <strong>Create app client</strong> to add it.</p>
+<hr>
+<h4 id="part-3-create-test-accounts">Part 3: Create Test Accounts</h4>
+<p><strong>Step 1:</strong> In the left-hand menu, open <strong>User management</strong> → click <strong>Users</strong>.</p>
+<p><strong>Step 2:</strong> Click <strong>Create user</strong>.</p>
+<p><strong>Step 3:</strong> Under Invitation message: select <strong>Don&rsquo;t send an invitation</strong>.</p>
+<p><strong>Step 4:</strong> Enter Email address = <code>Admin-test@gmail.com</code>, tick <strong>Mark email address as verified</strong> if you want to skip the email verification step (not required for internal test accounts).
+<img src="/images/5-Workshop/5.9-api-gateway-and-auth/3.4-create-user-admin-test.png?featherlight=false&amp;width=90pc" alt="Enter the details for the Admin-test user">
+<strong>Step 5:</strong> Set a Temporary password (or let Cognito generate one), click <strong>Create user</strong>.</p>
+<p><strong>Step 6:</strong> Repeat Steps 2-5 to create user <code>Dev-test@gmail.com</code>.</p>
+<p><strong>Step 7:</strong> Repeat Steps 2-5 to create user <code>Qa-test@gmail.com</code>.</p>
+<p><img src="/images/5-Workshop/5.9-api-gateway-and-auth/3-test-users-created.png?featherlight=false&amp;width=90pc" alt="3 test accounts created, Enabled status"></p>
+<hr>
+<h4 id="part-4-assign-test-accounts-to-groups">Part 4: Assign Test Accounts to Groups</h4>
+<p><strong>Step 1:</strong> From the <strong>Users</strong> list, click on user <code>Admin-test@gmail.com</code>.</p>
+<p><strong>Step 2:</strong> Scroll down to <strong>Group memberships</strong>, click <strong>Add user to group</strong>.</p>
+<p><strong>Step 3:</strong> Tick Group <strong>Admin</strong>, click <strong>Add</strong>.</p>
+<p><img src="/images/5-Workshop/5.9-api-gateway-and-auth/4-user-admin-added.png?featherlight=false&amp;width=90pc" alt="User Admin-test assigned to the Admin group"></p>
+<p><strong>Step 4:</strong> Go back to the <strong>Users</strong> list, click on user <code>Dev-test@gmail.com</code>.</p>
+<p><strong>Step 5:</strong> Scroll down to <strong>Group memberships</strong>, click <strong>Add user to group</strong>, tick Group <strong>Developer</strong>, click <strong>Add</strong>.</p>
+<p><img src="/images/5-Workshop/5.9-api-gateway-and-auth/5-user-developer-added.png?featherlight=false&amp;width=90pc" alt="User Dev-test assigned to the Developer group"></p>
+<p><strong>Step 6:</strong> Go back to the <strong>Users</strong> list, click on user <code>Qa-test@gmail.com</code>.</p>
+<p><strong>Step 7:</strong> Scroll down to <strong>Group memberships</strong>, click <strong>Add user to group</strong>, tick Group <strong>QA</strong>, click <strong>Add</strong>.</p>
+<p><img src="/images/5-Workshop/5.9-api-gateway-and-auth/6-user-qa-added.png?featherlight=false&amp;width=90pc" alt="User Qa-test assigned to the QA group"></p>
+<hr>
+<h4 id="part-5-create-an-api-gateway">Part 5: Create an API Gateway</h4>
+<p><strong>Step 1:</strong> In the AWS Console search bar, search for <code>API Gateway</code>, select <strong>API Gateway</strong>.</p>
+<p><strong>Step 2:</strong> In the left-hand menu, click <strong>APIs</strong> → click the orange <strong>Create API</strong> button.</p>
+<p><strong>Step 3:</strong> Under <strong>HTTP API</strong>, click <strong>Build</strong> (don&rsquo;t choose REST API — HTTP API is simpler and sufficient for this workshop).
+<img src="/images/5-Workshop/5.9-api-gateway-and-auth/5.3-api-gateway-http-build.png?featherlight=false&amp;width=90pc" alt="Choose HTTP API to build">
+<strong>Step 4:</strong> On the <strong>Create and configure integrations</strong> page: click <strong>Add integration</strong> → select <strong>Lambda</strong>.</p>
+<p><strong>Step 5:</strong> In the Lambda function dropdown, select <code>playwright-api-backend</code>. Set <strong>API name</strong> = <code>playwright-api</code>. Click <strong>Next</strong>.
+<img src="/images/5-Workshop/5.9-api-gateway-and-auth/5.5-api-integration-lambda.png?featherlight=false&amp;width=90pc" alt="Choose the Lambda integration and name the API">
+<strong>Step 6:</strong> On the <strong>Configure routes</strong> page (optional): select Method <strong>POST</strong>, enter Resource path <code>/trigger</code>, leave the Integration target as <code>playwright-api-backend (Lambda)</code>. Click <strong>Next</strong>.</p>
+<p><strong>Step 7:</strong> On the <strong>Define stages</strong> page (optional): keep the default Stage name = <code>$default</code>, Auto-deploy = <strong>enabled</strong>. Click <strong>Next</strong>.
+<img src="/images/5-Workshop/5.9-api-gateway-and-auth/5.7-api-stages-default.png?featherlight=false&amp;width=90pc" alt="Configure the default stage with auto-deploy">
+<strong>Step 8:</strong> On the <strong>Review and create</strong> page, verify all 3 sections: <strong>API name and integrations</strong> (playwright-api, playwright-api-backend), <strong>Routes</strong> (POST /trigger → playwright-api-backend), <strong>Stages</strong> ($default, Auto-deploy: enabled). Click <strong>Create</strong>.</p>
+<p><img src="/images/5-Workshop/5.9-api-gateway-and-auth/7a-review-create-api.png?featherlight=false&amp;width=90pc" alt="Review and create before creating the API"></p>
+<p><strong>Step 9:</strong> Confirm the message <strong>&ldquo;Successfully created API playwright-api (8bsb7jbhu7)&rdquo;</strong> — the auto-generated API ID will differ for you.</p>
+<p><img src="/images/5-Workshop/5.9-api-gateway-and-auth/7b-api-created.png?featherlight=false&amp;width=90pc" alt="API playwright-api created successfully"></p>
+<hr>
+<h4 id="part-6-create-an-authorizer-and-attach-it-to-the-route">Part 6: Create an Authorizer and Attach It to the Route</h4>
+<p><strong>Step 1:</strong> Go into the <code>playwright-api</code> API you just created, in the left-hand menu (under <strong>Develop</strong>) click <strong>Authorization</strong>.</p>
+<p><strong>Step 2:</strong> On the <strong>Manage authorizers</strong> tab, click <strong>Create</strong>.</p>
+<p><strong>Step 3:</strong> Authorizer type: select <strong>JWT</strong>.</p>
+<p><strong>Step 4:</strong> Name: enter <code>cognito-authorizer</code>.</p>
+<p><strong>Step 5:</strong> Identity source: enter <code>$request.header.Authorization</code>.</p>
+<p><strong>Step 6:</strong> Issuer URL: enter <code>https://cognito-idp.ap-southeast-1.amazonaws.com/&lt;user-pool-id&gt;</code> (replace <code>&lt;user-pool-id&gt;</code> with the real ID, e.g. <code>ap-southeast-1_DXMd3Q6ee</code> — found in Cognito Console → User pool → Overview).</p>
+<p><strong>Step 7:</strong> Audience: enter the App Client name or ID, e.g. <code>playwright-app</code>.</p>
+<p><strong>Step 8:</strong> Click <strong>Create</strong>, confirm the message <strong>&ldquo;Successfully created authorizer &lsquo;cognito-authorizer&rsquo;&rdquo;</strong>.</p>
+<p><img src="/images/5-Workshop/5.9-api-gateway-and-auth/8a-authorizer-created.png?featherlight=false&amp;width=90pc" alt="Authorizer cognito-authorizer created"></p>
+<p><strong>Step 9:</strong> Switch to the <strong>Attach authorizers to routes</strong> tab.</p>
+<p><strong>Step 10:</strong> In the <strong>Routes for playwright-api</strong> panel, open <code>/trigger</code>, select route <strong>POST</strong>.</p>
+<p><strong>Step 11:</strong> In the right-hand panel <strong>Authorizer for route POST /trigger</strong>, select <code>cognito-authorizer</code>, confirm the route shows a green <strong>JWT Auth</strong> badge.</p>
+<p><img src="/images/5-Workshop/5.9-api-gateway-and-auth/8b-route-jwt-attached.png?featherlight=false&amp;width=90pc" alt="Route POST /trigger with JWT Auth attached"></p>
+<p><em>(Note: The right-hand panel will show the Identity source, Issuer, and Audience you just configured — useful for a quick check if you hit a 401 error later on.)</em></p>
+<hr>
+<h4 id="part-7-deploy-the-api-and-get-the-invoke-url">Part 7: Deploy the API and Get the Invoke URL</h4>
+<p><strong>Step 1:</strong> In the left-hand menu (under <strong>Deploy</strong>), click <strong>Stages</strong>.</p>
+<p><strong>Step 2:</strong> Click the orange <strong>Deploy</strong> button in the top-right corner, select stage <code>$default</code>, click <strong>Deploy</strong>.</p>
+<p><strong>Step 3:</strong> In the <strong>Stage details</strong> panel, copy the <strong>Invoke URL</strong>, e.g. in the form <code>https://8bsb7jbhu7.execute-api.ap-southeast-1.amazonaws.com</code> — this will be used in section 5.10 (Frontend).</p>
+<p><img src="/images/5-Workshop/5.9-api-gateway-and-auth/9-stage-invoke-url.png?featherlight=false&amp;width=90pc" alt="Stage $default with the Invoke URL"></p>
+<hr>
+<h4 id="verification">Verification</h4>
+<ul>
+<li>Test the API with Postman or curl, including a JWT token:</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>curl -X POST &lt;invoke-url&gt;/trigger -H <span style="color:#e6db74">&#34;Authorization: Bearer &lt;JWT&gt;&#34;</span> -d <span style="color:#e6db74">&#39;{&#34;target_url&#34;:&#34;https://example.com&#34;}&#39;</span>
+</span></span></code></pre></div><p>→ should receive a correct response, no 401/403 errors.</p>
+<ul>
+<li>If you get a 401 error even with a valid token, double-check the two Authorizer values: <strong>Issuer</strong> must be in the form <code>https://cognito-idp.ap-southeast-1.amazonaws.com/&lt;user-pool-id&gt;</code>, and <strong>Audience</strong> must match the correct App Client — either one being wrong will always return 401.</li>
+</ul>
+<hr>
+<p>Next, we will move on to <strong><a href="/NguyenCongVu-fcaj-report/5-workshop/5.10-frontend/">5.10. Frontend</a></strong> to deploy the Dashboard UI to S3 and CloudFront.</p>
+
+
+
+
+
+<footer class=" footline" >
+	
+</footer>
+
+        
+        </div> 
+        
+
+      </div>
+
+    <div id="navigation">
+        
+        
+        
+        
+            
+            
+                
+                    
+                    
+                
+                
+
+                    
+                    
+                        
+                    
+                    
+
+                    
+                        
+            
+            
+                
+                    
+                        
+                        
+                    
+                
+                
+
+                    
+                    
+                        
+                    
+                    
+
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                        
+                    
+                    
+
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                        
+                    
+                    
+
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                    
+                
+                
+
+                    
+                    
+                        
+                    
+                    
+
+                    
+                        
+            
+            
+                
+                    
+                        
+                        
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                        
+                    
+                    
+
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                        
+                    
+                    
+
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                        
+                        
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+            
+        
+        
+        
+
+
+	 
+	 
+		
+			<a class="nav nav-prev" href="/NguyenCongVu-fcaj-report/5-workshop/5.8-secrets-and-notification/5.8.2-notification/" title="SES Email Notification"> <i class="fa fa-chevron-left"></i></a>
+		
+		
+			<a class="nav nav-next" href="/NguyenCongVu-fcaj-report/5-workshop/5.10-frontend/" title="Frontend" style="margin-right: 0px;"><i class="fa fa-chevron-right"></i></a>
+		
+	
+    </div>
+
+    </section>
+    
+    <div style="left: -1000px; overflow: scroll; position: absolute; top: -1000px; border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;">
+      <div style="border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;"></div>
+    </div>
+    <script src="/NguyenCongVu-fcaj-report/js/clipboard.min.js?1784543807"></script>
+    <script src="/NguyenCongVu-fcaj-report/js/perfect-scrollbar.min.js?1784543807"></script>
+    <script src="/NguyenCongVu-fcaj-report/js/perfect-scrollbar.jquery.min.js?1784543807"></script>
+    <script src="/NguyenCongVu-fcaj-report/js/jquery.sticky.js?1784543807"></script>
+    <script src="/NguyenCongVu-fcaj-report/js/featherlight.min.js?1784543807"></script>
+    <script src="/NguyenCongVu-fcaj-report/js/highlight.pack.js?1784543807"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <script src="/NguyenCongVu-fcaj-report/js/modernizr.custom-3.6.0.js?1784543807"></script>
+    <script src="/NguyenCongVu-fcaj-report/js/learn.js?1784543807"></script>
+    <script src="/NguyenCongVu-fcaj-report/js/hugo-learn.js?1784543807"></script>
+
+    <link href="/NguyenCongVu-fcaj-report/mermaid/mermaid.css?1784543807" rel="stylesheet" />
+    <script src="/NguyenCongVu-fcaj-report/mermaid/mermaid.js?1784543807"></script>
+    <script>
+        mermaid.initialize({ startOnLoad: true });
+    </script>
+    <script>
+  (function (i, s, o, g, r, a, m) {
+    i["GoogleAnalyticsObject"] = r;
+    ((i[r] =
+      i[r] ||
+      function () {
+        (i[r].q = i[r].q || []).push(arguments);
+      }),
+      (i[r].l = 1 * new Date()));
+    ((a = s.createElement(o)), (m = s.getElementsByTagName(o)[0]));
+    a.async = 1;
+    a.src = g;
+    m.parentNode.insertBefore(a, m);
+  })(
+    window,
+    document,
+    "script",
+    "https://www.google-analytics.com/analytics.js",
+    "ga",
+  );
+
+  ga("create", "UA-158079754-2", "auto");
+  ga("send", "pageview");
+</script>
+
+  </body>
+</html>
