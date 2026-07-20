@@ -20,7 +20,7 @@ chapter: false
 
 &emsp; **Lớp:** AWS042026
 
-&emsp; **Công ty thực tập:** Amazon Web Services Viet Nam Company Limited
+&emsp; **Công ty thực tập:** Công ty TNHH Amazon Web Services Việt Nam
 
 &emsp; **Vị trí thực tập:** Workforce Bootcamp - First Cloud AI Journey
 

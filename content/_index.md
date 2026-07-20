@@ -20,7 +20,7 @@ chapter: false
 
 &emsp; **Class:** AWS042026
 
-&emsp; **Internship Company:** Amazon Web Services Viet Nam Company Limited
+&emsp; **Internship Company:** Công ty TNHH Amazon Web Services Việt Nam
 
 &emsp; **Internship Position:** Workforce Bootcamp - First Cloud AI Journey
 
