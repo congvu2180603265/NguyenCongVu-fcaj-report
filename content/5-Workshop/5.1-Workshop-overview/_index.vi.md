@@ -24,6 +24,14 @@ Trong workshop này, bạn sẽ xây dựng và triển khai một nền tảng 
 
 ![Architecture](/images/5-Workshop/5.1-Workshop-overview/Architecture.png?featherlight=false&width=90pc)
 
+### Video Tham khảo Thao tác Triển khai
+
+{{% notice info %}}
+Video dưới đây ghi lại quá trình thao tác thực tế trên giao diện AWS Console (thiết lập IAM, cấu hình Lambda, ECS...). Bạn có thể tham khảo video này kết hợp cùng tài liệu bên dưới để dễ dàng nắm bắt các bước triển khai hạ tầng.
+{{% /notice %}}
+
+👉 **[Xem Video Thao tác Cấu hình tại đây](https://drive.google.com/drive/folders/1czRuhzPvE-jRlHnOzVgb19QzMhZFUVnC?usp=sharing)**
+
 ---
 
 Tiếp theo, chúng ta sẽ chuyển sang **[5.2. Chuẩn bị](../5.2-Prerequisite/)** để thiết lập các công cụ và hạ tầng cần thiết.

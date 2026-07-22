@@ -11,7 +11,7 @@ pre : " <b> 5.2.4. </b> "
 In this section, we will create two S3 buckets in the **Asia Pacific (Singapore) (`ap-southeast-1`)** Region:
 
 | Bucket | Purpose |
-|---|---|
+| --- | --- |
 | `playwright-webui-12` | Stores the Dashboard Console frontend files |
 | `playwright-report-2026` | Stores reports, screenshots, and test result data |
 
@@ -28,7 +28,7 @@ Sign in to the **AWS Management Console**, open **Amazon S3**, then select **Cre
 Configure:
 
 | Property | Value |
-|---|---|
+| --- | --- |
 | AWS Region | `ap-southeast-1` |
 | Bucket type | `General purpose` |
 | Bucket namespace | `Global namespace` |
@@ -71,7 +71,7 @@ Properties
 Select:
 
 | Property | Value |
-|---|---|
+| --- | --- |
 | Static website hosting | `Enable` |
 | Hosting type | `Host a static website` |
 | Index document | `index.html` |
@@ -91,7 +91,7 @@ Do not make the report bucket public. For a production environment, keep the Web
 Go back to the S3 bucket list, select **Create bucket** and configure:
 
 | Property | Value |
-|---|---|
+| --- | --- |
 | AWS Region | `ap-southeast-1` |
 | Bucket type | `General purpose` |
 | Bucket namespace | `Global namespace` |

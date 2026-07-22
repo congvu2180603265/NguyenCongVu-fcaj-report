@@ -17,6 +17,7 @@ Mở trình duyệt và truy cập vào đường dẫn WebUI của bạn (từ 
 ### 2. Quản lý kịch bản kiểm thử (Test Suites)
 
 Bước tiếp theo là tải lên kịch bản kiểm thử Playwright.
+
 - Ở menu bên trái, chọn **Test Suites**.
 - Nhấn vào nút **+ Thêm Test Suite** ở góc trên bên phải.
 
@@ -33,6 +34,7 @@ Bước tiếp theo là tải lên kịch bản kiểm thử Playwright.
 ### 3. Kích hoạt kiểm thử thủ công
 
 Bây giờ chúng ta sẽ kích hoạt chạy thử nghiệm.
+
 - Ở menu bên trái, chọn **Chạy thủ công**.
 
 ![Chạy thủ công](/images/5-Workshop/5.12-end-to-end-test/4-manual-trigger.jpg)
@@ -56,6 +58,7 @@ Sau khi xử lý thành công bước gửi tin, màn hình sẽ thông báo **"
 ### 4. Xem lịch sử và chi tiết kiểm thử
 
 Để theo dõi kết quả của các phiên chạy:
+
 - Chuyển sang menu **Lịch sử**. Tại đây, bạn sẽ thấy danh sách các lần chạy cùng với trạng thái (`Pass` hoặc `Fail`), thời lượng chạy, và thông tin người kích hoạt. Toàn bộ dữ liệu này được lưu trữ trong DynamoDB.
 
 ![Lịch sử kiểm thử](/images/5-Workshop/5.12-end-to-end-test/8-history.jpg)
@@ -83,7 +86,6 @@ Sau khi test hoàn tất, Lambda Post-processing sẽ tự động lấy kết q
 
 - **Cấu hình Email:** Quản lý danh sách các email nhận thông báo kết quả tại menu **Cấu hình Email**.
   ![Cấu hình Email](/images/5-Workshop/5.12-end-to-end-test/13-email-config.jpg)
-
 
 Chúc mừng! Bạn đã cấu hình và chạy thành công toàn bộ kiến trúc Serverless Playwright Automation Framework trên AWS.
 

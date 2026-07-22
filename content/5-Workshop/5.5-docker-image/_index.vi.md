@@ -1,6 +1,6 @@
 ---
 title : "Docker Image"
-date : 2026-06-16
+date : 2026-07-10
 weight : 5
 chapter : false
 pre : " <b> 5.5. </b> "
@@ -12,7 +12,9 @@ Trong phần này, bạn sẽ build một Docker image chứa kịch bản kiể
 
 ### 1. Chuẩn bị Dockerfile
 
-Trước tiên, hãy đảm bảo rằng trong thư mục mã nguồn dự án của bạn đã có file `Dockerfile` để đóng gói Playwright. Dưới đây là một ví dụ `Dockerfile` cơ bản:
+Trước tiên, hãy đảm bảo rằng bạn đã clone mã nguồn kiểm thử từ GitHub (link đã được cung cấp ở mục **[5.2.5. Tạo ECR](../5.2-prerequisite/5.2.5-create-ecr/)**). Trong thư mục mã nguồn đó đã có sẵn file `Dockerfile` để đóng gói Playwright.
+
+*(Bạn không cần tự tạo file này, dưới đây chỉ là nội dung của file đó để bạn tham khảo)*:
 
 ```dockerfile
 # Sử dụng image chính thức của Playwright
@@ -48,7 +50,6 @@ aws ecr get-login-password --region ap-southeast-1 | docker login --username AWS
 
 ![Xác thực ECR thành công](/images/5-Workshop/5.5-docker-image/1-docker-login.png?featherlight=false&width=90pc)
 
-
 **Bước 2: Build Docker image**
 
 Đứng tại thư mục chứa `Dockerfile` và mã nguồn Playwright, chạy lệnh sau:
@@ -74,7 +75,6 @@ docker push 238337501662.dkr.ecr.ap-southeast-1.amazonaws.com/playwright-runner:
 ```
 
 ![Push image lên ECR thành công](/images/5-Workshop/5.5-docker-image/2-docker-push.png?featherlight=false&width=90pc)
-
 
 {{% notice tip %}}
 **Mẹo:** Đảm bảo bạn đã cài đặt và cấu hình `aws-cli` trên máy với đầy đủ quyền truy cập ECR (`AdministratorAccess` hoặc `AmazonEC2ContainerRegistryFullAccess`) trước khi thực hiện các lệnh trên.

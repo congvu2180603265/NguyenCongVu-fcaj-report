@@ -11,6 +11,7 @@ pre : " <b> 5.7. </b> "
 In this section, you will deploy four AWS Lambda functions that form the core orchestration layer of the serverless Playwright testing system. These functions handle API requests, coordinate ECS tasks, manage errors, and process post-test reports.
 
 You will configure the following functions:
+
 1. **playwright-api-backend**: Serves as the backend for the API Gateway to handle user requests.
 2. **playwright-coordinator**: Triggered by an SQS queue to launch ECS Fargate tasks.
 3. **playwright-error-handler**: Triggered by a Dead Letter Queue (DLQ) to handle failed messages.
@@ -46,13 +47,14 @@ This function acts as the integration point for your API Gateway.
 **Step 10:** Navigate to the **Configuration** tab, then select **Environment variables**. Click **Edit**.
 
 **Step 11:** Add the following key-value pairs based on the resources created in previous steps:
-   - `COGNITO_USER_POOL_ID`: Your Cognito User Pool ID (e.g., `ap-southeast-1_...`)
-   - `EMAIL_CONFIG_TABLE`: `playwright-email-config`
-   - `REPORT_BUCKET`: `playwright-report-2026` (or your unique bucket name)
-   - `SCHEDULER_ROLE_ARN`: The ARN of your `playwright-lambda-role`
-   - `TASK_QUEUE_URL`: The URL of your `playwright-task-queue`
-   - `TEST_HISTORY_TABLE`: `playwright-test-history`
-   - `TEST_SUITES_TABLE`: `playwright-test-suites`
+
+- `COGNITO_USER_POOL_ID`: Your Cognito User Pool ID *(Note: Temporarily enter `temp` or leave it blank. You will need to return and update this variable after creating the User Pool in Section 5.9)*
+- `EMAIL_CONFIG_TABLE`: `playwright-email-config`
+- `REPORT_BUCKET`: `playwright-report-2026` (or your unique bucket name)
+- `SCHEDULER_ROLE_ARN`: The ARN of your `playwright-lambda-role`
+- `TASK_QUEUE_URL`: The URL of your `playwright-task-queue`
+- `TEST_HISTORY_TABLE`: `playwright-test-history`
+- `TEST_SUITES_TABLE`: `playwright-test-suites`
 ![API Backend Environment Variables](/images/5-Workshop/5.7-lambda-functions/env-vars-api-backend.png)
 
 ---
@@ -79,13 +81,14 @@ This function listens to the task queue and launches the ECS Fargate tasks.
 **Step 8:** Adjust the **Timeout** to `30` seconds and the **Ephemeral storage** to `512` MB. Click **Save**.
 
 **Step 9:** Navigate to **Environment variables** and add the following keys with their corresponding values (VPC Subnets, Security Groups, Cluster names, etc.):
-   - `ASSIGN_PUBLIC_IP`: `DISABLED`
-   - `CONTAINER_NAME`: `playwright-container`
-   - `ECS_CLUSTER_NAME`: `playwright-cluster`
-   - `ECS_TASK_DEFINITION`: `playwright-task-def`
-   - `SECURITY_GROUP_IDS`: Your ECS Security Group ID (e.g., `sg-...`)
-   - `SUBNET_IDS`: Your Private Subnet ID (e.g., `subnet-...`)
-   - `TEST_HISTORY_TABLE`: `playwright-test-history`
+
+- `ASSIGN_PUBLIC_IP`: `DISABLED`
+- `CONTAINER_NAME`: `playwright-container`
+- `ECS_CLUSTER_NAME`: `playwright-cluster`
+- `ECS_TASK_DEFINITION`: `playwright-task-def`
+- `SECURITY_GROUP_IDS`: Your ECS Security Group ID (e.g., `sg-...`)
+- `SUBNET_IDS`: Your Private Subnet ID (e.g., `subnet-...`)
+- `TEST_HISTORY_TABLE`: `playwright-test-history`
 ![Coordinator Environment Variables](/images/5-Workshop/5.7-lambda-functions/env-vars-coordinator.png)
 
 ---
@@ -106,8 +109,9 @@ This function processes messages that fail to be processed by the coordinator.
 ![Error Handler SQS Trigger](/images/5-Workshop/5.7-lambda-functions/sqs-trigger-error-handler.png)
 
 **Step 6:** Navigate to **Environment variables** and add the following:
-   - `ERROR_DYNAMODB_TABLE`: `playwright-error-log`
-   - `TEST_HISTORY_TABLE`: `playwright-test-history`
+
+- `ERROR_DYNAMODB_TABLE`: `playwright-error-log`
+- `TEST_HISTORY_TABLE`: `playwright-test-history`
 ![Error Handler Environment Variables](/images/5-Workshop/5.7-lambda-functions/env-vars-error-handler.png)
 
 ---
@@ -127,24 +131,27 @@ This function is triggered by EventBridge after an ECS task finishes. It process
 **Step 5:** Go to the **Configuration** tab, select **General configuration**, and click **Edit**. Set the **Timeout** to `2` min `0` sec. Click **Save**.
 
 **Step 6:** Select **VPC** and click **Edit**. Configure as follows, then click **Save**.
-   - **VPC**: Select your `playwright-vpc`
-   - **Subnets**: Select `playwright-private-subnet`
-   - **Security groups**: Select `playwright-sg-lambda`
+
+- **VPC**: Select your `playwright-vpc`
+- **Subnets**: Select `playwright-private-subnet`
+- **Security groups**: Select `playwright-sg-lambda`
 ![Postprocessing VPC Configuration](/images/5-Workshop/5.7-lambda-functions/postprocessing-vpc.png)
 
 **Step 7:** Select **Environment variables** and click **Edit**. Add the following:
-   - `EMAIL_CONFIG_TABLE`: `playwright-email-config`
-   - `LOG_GROUP_NAME`: `/ecs/playwright-runner`
-   - `OPENAI_SECRET_NAME`: `playwright/openai-api-key`
-   - `REPORT_BUCKET`: `playwright-report-2026`
-   - `SES_SENDER_EMAIL`: Your verified SES sender email address
-   - `TEST_HISTORY_TABLE`: `playwright-test-history`
+
+- `EMAIL_CONFIG_TABLE`: `playwright-email-config`
+- `LOG_GROUP_NAME`: `/ecs/playwright-runner`
+- `OPENAI_SECRET_NAME`: `playwright/openai-api-key`
+- `REPORT_BUCKET`: `playwright-report-2026`
+- `SES_SENDER_EMAIL`: Your SES sender email address *(Note: Enter the email address you plan to use. Detailed instructions for verifying this email on AWS SES will be provided in Section 5.8)*
+- `TEST_HISTORY_TABLE`: `playwright-test-history`
 ![Postprocessing Environment Variables](/images/5-Workshop/5.7-lambda-functions/postprocessing-env-vars.png)
 
+{{% notice note %}}
+**Important Note regarding EventBridge Trigger**
 
-> [!NOTE]
-> **Important Note regarding EventBridge Trigger**
-> The trigger for `playwright-postprocessing` will be configured from the EventBridge console in a later section. When EventBridge invokes a Lambda function via an IAM Role (instead of a resource-based policy), the AWS Lambda Console will **not** display an EventBridge entry in the "Triggers" tab. This is a known UI limitation of the AWS Console and does not affect functionality.
+The trigger for `playwright-postprocessing` will be configured from the EventBridge console in a later section. When EventBridge invokes a Lambda function via an IAM Role (instead of a resource-based policy), the AWS Lambda Console will **not** display an EventBridge entry in the "Triggers" tab. This is a known UI limitation of the AWS Console and does not affect functionality.
+{{% /notice %}}
 
 ---
 

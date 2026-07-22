@@ -24,6 +24,14 @@ In this workshop, you will build and deploy a Cloud-Native End-to-End (E2E) auto
 
 ![Architecture](/images/5-Workshop/5.1-Workshop-overview/Architecture.png?featherlight=false&width=90pc)
 
+### Infrastructure Deployment Reference Video
+
+{{% notice info %}}
+The video below records the actual configuration process on the AWS Console (setting up IAM, configuring Lambda, ECS, etc.). You can refer to this video alongside the documentation below to easily grasp the infrastructure deployment steps.
+{{% /notice %}}
+
+👉 **[Watch the Configuration Walkthrough Video here](https://drive.google.com/drive/folders/1czRuhzPvE-jRlHnOzVgb19QzMhZFUVnC?usp=sharing)**
+
 ---
 
 Next, we will move on to **[5.2. Prerequisites](../5.2-Prerequisite/)** to set up the necessary tools and infrastructure.

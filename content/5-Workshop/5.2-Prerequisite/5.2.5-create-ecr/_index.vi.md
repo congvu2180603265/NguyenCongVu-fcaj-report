@@ -13,7 +13,7 @@ Trong phần này, chúng ta sẽ tạo một private repository trên **Amazon 
 Thông tin repository:
 
 | Thuộc tính | Giá trị |
-|---|---|
+| --- | --- |
 | AWS Region | `ap-southeast-1` |
 | Visibility | `Private` |
 | Repository name | `playwright-runner` |
@@ -127,3 +127,14 @@ Repository URI có dạng:
 ```
 
 URI này sẽ được sử dụng khi tạo ECS task definition cho Playwright Runner.
+
+{{% notice info %}}
+**Mã nguồn Playwright (GitHub)**
+
+Mã nguồn kiểm thử và file `Dockerfile` để build image cho ECR này đã được chuẩn bị sẵn. Bạn hãy clone repository sau về máy để sử dụng ở phần 5.5 nhé:
+[https://github.com/VanPhuc-027/playwright-runner.git](https://github.com/VanPhuc-027/playwright-runner.git)
+{{% /notice %}}
+
+---
+
+Tiếp theo, chúng ta sẽ chuyển sang **[5.3. Lưu trữ và Cơ sở dữ liệu](../5.3-storage-and-database/)** để khởi tạo S3 Bucket và bảng DynamoDB.

@@ -11,7 +11,7 @@ pre : " <b> 5.2.4. </b> "
 Trong phần này, chúng ta sẽ tạo hai bucket S3 tại Region **Asia Pacific (Singapore) (`ap-southeast-1`)**:
 
 | Bucket | Mục đích |
-|---|---|
+| --- | --- |
 | `playwright-webui-12` | Lưu các tệp frontend của Dashboard Console |
 | `playwright-report-2026` | Lưu báo cáo, ảnh chụp và dữ liệu kết quả kiểm thử |
 
@@ -28,7 +28,7 @@ Tên bucket S3 phải là duy nhất. Nếu các tên trong hướng dẫn đã 
 Cấu hình:
 
 | Thuộc tính | Giá trị |
-|---|---|
+| --- | --- |
 | AWS Region | `ap-southeast-1` |
 | Bucket type | `General purpose` |
 | Bucket namespace | `Global namespace` |
@@ -71,7 +71,7 @@ Properties
 Chọn:
 
 | Thuộc tính | Giá trị |
-|---|---|
+| --- | --- |
 | Static website hosting | `Enable` |
 | Hosting type | `Host a static website` |
 | Index document | `index.html` |
@@ -91,7 +91,7 @@ Không public bucket báo cáo. Với môi trường production, nên giữ buck
 Quay lại danh sách S3 bucket, chọn **Create bucket** và cấu hình:
 
 | Thuộc tính | Giá trị |
-|---|---|
+| --- | --- |
 | AWS Region | `ap-southeast-1` |
 | Bucket type | `General purpose` |
 | Bucket namespace | `Global namespace` |

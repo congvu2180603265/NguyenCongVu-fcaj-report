@@ -13,6 +13,7 @@ In this section, we will build the network infrastructure from scratch. The firs
 **Step 1:** Access the **VPC Dashboard** on the AWS Console and click the **Create VPC** button.
 
 **Step 2:** On the creation interface, configure the following basic parameters:
+
 - **Resources to create:** Select **VPC only**.
 - **Name tag:** Enter a name for the VPC (e.g., `playwright-vpc`).
 - **IPv4 CIDR block:** Select *IPv4 CIDR manual input* and enter the network range `10.0.0.0/16`.
@@ -32,6 +33,7 @@ After creating the VPC, we need to divide it into Subnets. Our system requires a
 **Step 1:** On the left menu, select **Subnets** and click the **Create subnet** button in the top right corner.
 
 **Step 2:** On the configuration screen, select your newly created VPC (`playwright-vpc`). Under **Subnet settings**, fill in the following information:
+
 - **Subnet name:** `playwright-public-subnet`
 - **Availability Zone:** Select `Asia Pacific (Singapore) / apse1-az2 (ap-southeast-1a)`
 - **IPv4 subnet CIDR block:** Enter `10.0.1.0/24`
@@ -41,9 +43,9 @@ After creating the VPC, we need to divide it into Subnets. Our system requires a
 
 **Step 3:** Scroll to the bottom, double-check the parameters, and click the orange **Create subnet** button.
 
-
 **Step 4: Configure Private Subnet**
 The process of creating a Private Subnet is exactly the same as the Public Subnet. Click **Create subnet** again to create the second subnet with the following parameters:
+
 - **Subnet name:** `playwright-private-subnet`
 - **Availability Zone:** Select `Asia Pacific (Singapore) / apse1-az1 (ap-southeast-1b)` (or any AZ different from the public subnet)
 - **IPv4 subnet CIDR block:** Enter `10.0.2.0/24`
@@ -69,6 +71,7 @@ For the Public Subnet to communicate with the Internet, we need an **Internet Ga
 The Private Subnet cannot access the Internet directly. To allow resources in the Private Subnet (like ECS Fargate) to download packages or communicate outbound, we need a **NAT Gateway** placed in the Public Subnet, and this NAT Gateway requires a static IP address (**Elastic IP**).
 
 **Step 1: Allocate Elastic IP**
+
 - From the left menu, select **Elastic IPs** (under Virtual private cloud) and click the **Allocate Elastic IP address** button.
 - On the configuration screen, keep the default options:
   - **Network border group:** `ap-southeast-1`
@@ -78,6 +81,7 @@ The Private Subnet cannot access the Internet directly. To allow resources in th
 ![Allocate Elastic IP](/images/5-Workshop/5.2-Prerequisite/5.2.2-create-vpc/allocate-eip.png?featherlight=false&width=90pc)
 
 **Step 2: Create NAT Gateway**
+
 - Return to the left menu, select **NAT gateways**, and click the **Create NAT gateway** button.
 - On the **NAT gateway settings** screen, fill in the exact parameters:
   - **Name:** `playwright-nat`
@@ -105,8 +109,9 @@ A Route Table acts like a traffic sign, deciding where network traffic should go
 **Step 5:** Next, switch to the **Routes** tab and click **Edit routes**.
 
 **Step 6:** Click **Add route**:
-   - **Destination:** Enter `0.0.0.0/0`
-   - **Target:** Select **Internet Gateway** and point it to the IGW you just created (e.g., `igw-...`).
+
+- **Destination:** Enter `0.0.0.0/0`
+- **Target:** Select **Internet Gateway** and point it to the IGW you just created (e.g., `igw-...`).
 
 **Step 7:** Click **Save changes**.
 
@@ -128,8 +133,9 @@ A Route Table acts like a traffic sign, deciding where network traffic should go
 **Step 5:** Next, switch to the **Routes** tab and click **Edit routes**.
 
 **Step 6:** Click **Add route**:
-   - **Destination:** Enter `0.0.0.0/0`
-   - **Target:** Select **NAT Gateway** and point it to the NAT Gateway you just created (`nat-... (playwright-nat)`).
+
+- **Destination:** Enter `0.0.0.0/0`
+- **Target:** Select **NAT Gateway** and point it to the NAT Gateway you just created (`nat-... (playwright-nat)`).
 
 **Step 7:** Click **Save changes**.
 
@@ -144,12 +150,13 @@ To allow services inside the VPC to communicate securely, we need to set up Secu
 **Step 1:** Select **Security Groups** from the left menu and click **Create security group**.
 
 **Step 2:** We will create 2 SGs one by one with identical configurations (except for the name):
-   - **Lambda SG:**
-     - **Security group name:** `playwright-sg-lambda`
-     - **Description:** `security group for lambda function`
-   - **Fargate SG:** (Repeat the Create step after creating Lambda SG)
-     - **Security group name:** `playwright-sg-fargate`
-     - **Description:** `security group for fargate`
+
+- **Lambda SG:**
+  - **Security group name:** `playwright-sg-lambda`
+  - **Description:** `security group for lambda function`
+- **Fargate SG:** (Repeat the Create step after creating Lambda SG)
+  - **Security group name:** `playwright-sg-fargate`
+  - **Description:** `security group for fargate`
 
 **Step 3:** For both SGs, ensure the **VPC** is set to `playwright-vpc`.
 
@@ -171,9 +178,10 @@ To allow services inside the VPC to communicate securely, we need to set up Secu
 **Step 4:** Select the `playwright-vpc`.
 
 **Step 5:** **Inbound rules:** We need to allow Lambda and Fargate to call the Endpoints via HTTPS. Add 2 rules:
-   - **Type:** `HTTPS` (Automatically sets to Port 443).
-   - **Source:** Select `Custom`, click the search box and select `playwright-sg-lambda`.
-   - Click **Add rule** to add a second identical rule, but select `playwright-sg-fargate` as the Source.
+
+- **Type:** `HTTPS` (Automatically sets to Port 443).
+- **Source:** Select `Custom`, click the search box and select `playwright-sg-lambda`.
+- Click **Add rule** to add a second identical rule, but select `playwright-sg-fargate` as the Source.
 
 ![Endpoint SG Inbound Configuration](/images/5-Workshop/5.2-Prerequisite/5.2.2-create-vpc/endpoint-sg-inbound.png?featherlight=false&width=90pc)
 
@@ -186,4 +194,3 @@ To allow services inside the VPC to communicate securely, we need to set up Secu
 ---
 
 Next, we will move on to **[5.2.3. Configure IAM](../5.2.3-configure-iam/)** to grant permissions for the Lambda and ECS services to operate within this VPC.
-

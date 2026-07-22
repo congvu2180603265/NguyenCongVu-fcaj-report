@@ -11,6 +11,7 @@ pre : " <b> 5.2. </b> "
 Before we start deploying the core of the Serverless Playwright system, we need to complete some foundational preparation steps.
 
 These steps include:
+
 1. **Tools & API Key:** Download source code and get the Google Gemini AI connection key.
 2. **Create VPC:** Build a secure Virtual Private Cloud for Playwright containers.
 3. **Configure IAM:** Strictly set permissions for Lambda and ECS services.

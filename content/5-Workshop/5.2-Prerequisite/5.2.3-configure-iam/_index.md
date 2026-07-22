@@ -6,16 +6,16 @@ chapter : false
 pre : " <b> 5.2.3. </b> "
 ---
 
-#### Configure IAM roles for Lambda and ECS
+## Configure IAM roles for Lambda and ECS
 
 In this section, you will create four IAM roles for the Playwright testing system:
 
 | IAM role | Trusted service | Purpose |
-|---|---|---|
+| --- | --- | --- |
 | `playwright-lambda-role` | AWS Lambda | Allows Lambda to orchestrate ECS and process results |
 | `playwright-postprocessing-role` | AWS Lambda | Dedicated role for the `playwright-postprocessing` Lambda, separated to more tightly control access to Secrets Manager and SES |
-| `playwright-ecs-execution-role` | ECS Tasks | Allows ECS to pull images from ECR and write logs |
-| `playwright-ecs-task-role` | ECS Tasks | Grants permissions to the application inside the container |
+| `playwright-ecs-execution-role` | ECS Tasks | Allows the ECS agent to pull images from ECR and write container logs |
+| `playwright-ecs-task-role` | ECS Tasks | Grants permissions to the Playwright application inside the container |
 
 {{% notice warning %}}
 Follow the principle of least privilege. The `FullAccess` policies visible in the screenshots are suitable only for workshop demonstration. Do not grant `IAMFullAccess` to a Lambda function or ECS task in a real environment.
@@ -23,141 +23,179 @@ Follow the principle of least privilege. The `FullAccess` policies visible in th
 
 ---
 
-**Step 1:** Create the Lambda execution role
+### 1. Create the Lambda execution role `playwright-lambda-role`
 
 Open the **AWS Management Console**, search for **IAM**, and choose:
 
 ```text
-Roles
-→ Create role
+Roles → Create role
 ```
 
-Select **AWS service** as the trusted entity and select the **Lambda** use case.
+**Step 1 – Select trusted entity:** Select **AWS service** as the trusted entity, choose **Lambda** under **Use case**, then click **Next**.
 
-For the role name, enter:
+![Select Lambda as the trusted entity](/images/5-Workshop/5.2-Prerequisite/5.2.3-configure-iam/1a-lambda-select-trusted-entity.png?featherlight=false&width=90pc)
+
+**Step 2 – Add permissions:** Search for and attach the following AWS managed policies, then click **Next**.
+
+| Policy | Purpose |
+| --- | --- |
+| `AmazonSQSFullAccess` | Allows Lambda to send/receive messages from SQS queues |
+| `AmazonECS_FullAccess` | Allows Lambda to start and monitor ECS tasks |
+| `AmazonDynamoDBFullAccess` | Allows reading/writing the workshop DynamoDB table |
+| `CloudWatchLogsFullAccess` | Allows writing logs to CloudWatch Logs |
+| `SecretsManagerReadWrite` | Allows reading secrets (API keys, credentials) |
+| `AmazonS3FullAccess` | Allows reading/writing reports in the S3 bucket |
+| `AmazonSESFullAccess` | Allows sending email through Amazon SES |
+| `IAMFullAccess` | Allows Lambda to pass roles to ECS tasks |
+
+![Attach policies for playwright-lambda-role](/images/5-Workshop/5.2-Prerequisite/5.2.3-configure-iam/1b-lambda-add-permissions.png?featherlight=false&width=90pc)
+
+**Step 3 – Name, review, and create:** Enter the role name:
 
 ```text
 playwright-lambda-role
 ```
 
-![Create the Lambda role](/images/5-Workshop/5.2-Prerequisite/5.2.3-configure-iam/1-create-lambda-role.png?featherlight=false&width=90pc)
+![Enter name playwright-lambda-role](/images/5-Workshop/5.2-Prerequisite/5.2.3-configure-iam/1-create-lambda-role.png?featherlight=false&width=90pc)
 
-The post-processing Lambda requires these permission groups:
+Verify that the **Permissions policies** section shows all 8 policies above, and that the trust policy contains the `lambda.amazonaws.com` service principal, then choose **Create role**.
 
-- Write logs to CloudWatch Logs.
-- Read ECS task status.
-- Read ECS task logs.
-- Read and write reports in `playwright-report-2026`.
-- Update the workshop DynamoDB table.
-- Read the `playwright/openai-api-key` secret.
-- Send email through Amazon SES.
-
-![Policies for the Lambda role](/images/5-Workshop/5.2-Prerequisite/5.2.3-configure-iam/2-lambda-role-created.png?featherlight=false&width=90pc)
+![Verify and create role](/images/5-Workshop/5.2-Prerequisite/5.2.3-configure-iam/2-lambda-role-created.png?featherlight=false&width=90pc)
 
 {{% notice note %}}
-For production, replace broad AWS managed `FullAccess` policies with custom policies restricted by action and resource ARN. Secrets Manager requires only `secretsmanager:GetSecretValue`; `SecretsManagerReadWrite` is unnecessary.
+For production, replace broad AWS managed `FullAccess` policies with custom policies restricted by action and resource ARN. Secrets Manager requires only `secretsmanager:GetSecretValue`. Do not grant `IAMFullAccess` — only `iam:PassRole` scoped to specific ARNs is needed.
 {{% /notice %}}
-
-Verify that the trust policy contains the `lambda.amazonaws.com` service principal, and then choose **Create role**.
 
 ---
 
-**Step 2:** Create a dedicated role for the Post-processing Lambda
+### 2. Create a dedicated role for the Post-processing Lambda `playwright-postprocessing-role`
 
-Besides the shared `playwright-lambda-role` from Step 1, the `playwright-postprocessing` Lambda uses **its own dedicated role** — since this function calls Secrets Manager to retrieve the AI API Key and calls SES to send email more than the other Lambdas in the system, it's separated out for easier control and to narrow down permissions later.
+Besides the shared `playwright-lambda-role` from Step 1, the `playwright-postprocessing` Lambda uses **its own dedicated role** — since this function calls Secrets Manager to retrieve the AI API Key and calls SES to send email more frequently than the other Lambdas, it is separated for easier access control and to narrow permissions later.
 
-Create another new role, select:
+Create another new role and select:
 
-| Property | Value |
-|---|---|
-| Trusted entity type | `AWS service` |
-| Service or use case | `Lambda` |
+**Step 1 – Select trusted entity:** Select **AWS service** as the trusted entity, choose **Lambda** under **Use case**, then click **Next**.
 
-Attach the same permission groups as Step 1 (CloudWatch Logs, DynamoDB, Secrets Manager, S3, SES).
+![Select Lambda as the trusted entity](/images/5-Workshop/5.2-Prerequisite/5.2.3-configure-iam/2a-postprocessing-select-trusted-entity.png?featherlight=false&width=90pc)
 
-Enter the role name:
+**Step 2 – Add permissions:** Search for and attach the following AWS managed policies, then click **Next**.
+
+| Policy | Purpose |
+| --- | --- |
+| `AmazonDynamoDBFullAccess` | Update test result status in DynamoDB |
+| `AmazonECS_FullAccess` | Allows Lambda to start and monitor ECS tasks |
+| `AmazonS3FullAccess` | Read/write Playwright reports in S3 |
+| `AmazonSESFullAccess` | Send test result notification emails |
+| `AmazonSQSFullAccess` | Allows Lambda to send/receive messages from SQS queues |
+| `AWSLambdaVPCAccessExecutionRole` | Allows Lambda to connect to VPC |
+| `CloudWatchLogsFullAccess` | Write function execution logs |
+| `SecretsManagerReadWrite` | Read the AI API Key from Secrets Manager |
+
+![Attach policies for playwright-postprocessing-role](/images/5-Workshop/5.2-Prerequisite/5.2.3-configure-iam/2b-postprocessing-add-permissions.png?featherlight=false&width=90pc)
+
+**Step 3 – Name, review, and create:** Enter the role name:
 
 ```text
 playwright-postprocessing-role
 ```
 
-![Role playwright-postprocessing-role created](/images/5-Workshop/5.2-Prerequisite/5.2.3-configure-iam/2b-postprocessing-role-created.jpeg?featherlight=false&width=90pc)
+![Enter name playwright-postprocessing-role](/images/5-Workshop/5.2-Prerequisite/5.2.3-configure-iam/2c-postprocessing-name.png?featherlight=false&width=90pc)
+
+Verify that the **Permissions policies** section shows all 8 policies above, and that the trust policy contains the `lambda.amazonaws.com` service principal, then choose **Create role**.
+
+![Verify and create role](/images/5-Workshop/5.2-Prerequisite/5.2.3-configure-iam/2d-postprocessing-created.png?featherlight=false&width=90pc)
 
 {{% notice note %}}
 Note down this role's ARN (in the form `arn:aws:iam::<account-id>:role/playwright-postprocessing-role`) — it will be attached to the `playwright-postprocessing` Lambda in section 5.7, instead of `playwright-lambda-role`.
 {{% /notice %}}
 
-Verify that the trust policy contains the `lambda.amazonaws.com` service principal, and then choose **Create role**.
-
 ---
 
-**Step 3:** Create the ECS task execution role
+### 3. Create the ECS task execution role `playwright-ecs-execution-role`
 
-Create another role and select:
+Create another new role.
+
+**Step 1 – Select trusted entity:** Choose:
 
 | Property | Value |
-|---|---|
+| --- | --- |
 | Trusted entity type | `AWS service` |
 | Service or use case | `Elastic Container Service` |
 | Use case | `Elastic Container Service Task` |
 
+Then click **Next**.
+
 ![Select ECS Tasks as the trusted service](/images/5-Workshop/5.2-Prerequisite/5.2.3-configure-iam/3-create-ecs-execution-role.png?featherlight=false&width=90pc)
 
-Attach this AWS managed policy:
+**Step 2 – Add permissions:** Search for and attach the following policy, then click **Next**.
 
-```text
-AmazonECSTaskExecutionRolePolicy
-```
+| Policy | Purpose |
+| --- | --- |
+| `AmazonECSTaskExecutionRolePolicy` | Allows the ECS agent to pull images from Amazon ECR and send container logs to CloudWatch Logs |
 
-This policy allows the ECS agent to pull images from Amazon ECR and send container logs to CloudWatch Logs.
+This is the standard AWS managed policy dedicated to the ECS task execution role.
 
-![Policy for the ECS execution role](/images/5-Workshop/5.2-Prerequisite/5.2.3-configure-iam/4-ecs-execution-role-created.png?featherlight=false&width=90pc)
+![Attach AmazonECSTaskExecutionRolePolicy](/images/5-Workshop/5.2-Prerequisite/5.2.3-configure-iam/3b-ecs-execution-add-permissions.png?featherlight=false&width=90pc)
 
-Enter the role name:
+**Step 3 – Name, review, and create:** Enter the role name:
 
 ```text
 playwright-ecs-execution-role
 ```
 
-![Name the ECS execution role](/images/5-Workshop/5.2-Prerequisite/5.2.3-configure-iam/5-playwright-ecs-execution-role.png?featherlight=false&width=90pc)
+![Enter name playwright-ecs-execution-role](/images/5-Workshop/5.2-Prerequisite/5.2.3-configure-iam/5-playwright-ecs-execution-role.png?featherlight=false&width=90pc)
 
-Verify that the trust policy uses the `ecs-tasks.amazonaws.com` service principal, and then choose **Create role**.
+Verify that the trust policy uses the `ecs-tasks.amazonaws.com` service principal and that the `AmazonECSTaskExecutionRolePolicy` is attached, then choose **Create role**.
+
+![Verify and create role](/images/5-Workshop/5.2-Prerequisite/5.2.3-configure-iam/4-ecs-execution-role-created.png?featherlight=false&width=90pc)
 
 ---
 
-**Step 4:** Create the ECS task role
+### 4. Create the ECS task role `playwright-ecs-task-role`
 
-Create another role with the same trusted service:
+Create another new role.
 
-```text
-Elastic Container Service Task
-```
+**Step 1 – Select trusted entity:** Choose:
 
-![Create the ECS task role](/images/5-Workshop/5.2-Prerequisite/5.2.3-configure-iam/6-ecs-task-role-created.png?featherlight=false&width=90pc)
+| Property | Value |
+| --- | --- |
+| Trusted entity type | `AWS service` |
+| Service or use case | `Elastic Container Service` |
+| Use case | `Elastic Container Service Task` |
 
-The Playwright application inside the container uses the task role. Grant only the permissions that the application actually requires, such as:
+Then click **Next**.
 
-- Read test scripts from the report bucket.
-- Write reports, screenshots, and results to the required bucket prefixes.
-- Write application logs if the application calls CloudWatch Logs directly.
+![Select ECS Tasks as the trusted service](/images/5-Workshop/5.2-Prerequisite/5.2.3-configure-iam/6-ecs-task-role-created.png?featherlight=false&width=90pc)
 
-The workshop screenshot demonstrates selecting S3 and CloudWatch Logs policies:
+**Step 2 – Add permissions:** The Playwright application inside the container uses this task role. Attach the following policies, then click **Next**.
 
-![Policies for the ECS task role](/images/5-Workshop/5.2-Prerequisite/5.2.3-configure-iam/7-create-ecs-task-role.png?featherlight=false&width=90pc)
+| Policy | Purpose |
+| --- | --- |
+| `AmazonS3FullAccess` | Write reports, screenshots, and test results to the S3 bucket |
+| `CloudWatchLogsFullAccess` | Write application logs to CloudWatch Logs |
+| `SecretsManagerReadWrite` | Read secrets (credentials, API keys) needed at test runtime |
 
-Enter the role name:
+![Attach policies for playwright-ecs-task-role](/images/5-Workshop/5.2-Prerequisite/5.2.3-configure-iam/4b-ecs-task-add-permissions.png?featherlight=false&width=90pc)
+
+**Step 3 – Name, review, and create:** Enter the role name:
 
 ```text
 playwright-ecs-task-role
 ```
 
-![Name the ECS task role](/images/5-Workshop/5.2-Prerequisite/5.2.3-configure-iam/8-ecs-task-role-policies.png?featherlight=false&width=90pc)
+![Enter name playwright-ecs-task-role](/images/5-Workshop/5.2-Prerequisite/5.2.3-configure-iam/8-ecs-task-role-policies.png?featherlight=false&width=90pc)
 
-Then choose **Create role**.
+Verify that the trust policy uses the `ecs-tasks.amazonaws.com` service principal and that all 3 policies above are attached, then choose **Create role**.
+
+![Verify and create role](/images/5-Workshop/5.2-Prerequisite/5.2.3-configure-iam/7-create-ecs-task-role.png?featherlight=false&width=90pc)
+
+{{% notice note %}}
+For production, replace `AmazonS3FullAccess` with a custom policy that allows only `s3:PutObject` on a specific bucket ARN. Similarly, `SecretsManagerReadWrite` should be narrowed down to `secretsmanager:GetSecretValue` for the exact secret ARN.
+{{% /notice %}}
 
 ---
 
-**Step 5:** Verify the roles
+### 5. Verify the roles
 
 Return to **IAM → Roles** and confirm that all four roles exist:
 
@@ -168,13 +206,18 @@ playwright-ecs-execution-role
 playwright-ecs-task-role
 ```
 
-![Created IAM roles](/images/5-Workshop/5.2-Prerequisite/5.2.3-configure-iam/9-lambda-role-policies.png?featherlight=false&width=90pc)
+![Created IAM roles list](/images/5-Workshop/5.2-Prerequisite/5.2.3-configure-iam/9-lambda-role-policies.png?featherlight=false&width=90pc)
 
 When creating the ECS task definition later, configure:
 
 | Field | IAM role |
-|---|---|
+| --- | --- |
 | Task execution role | `playwright-ecs-execution-role` |
 | Task role | `playwright-ecs-task-role` |
 
-The `playwright-postprocessing` Lambda function uses **`playwright-postprocessing-role`** as its execution role (not the shared `playwright-lambda-role`). The remaining Lambda functions (`playwright-api-backend`, `playwright-coordinator`, `playwright-error-handler`) continue to use `playwright-lambda-role`.
+{{% notice info %}}
+**Important note on assigning IAM Roles to Lambda functions:**
+
+- **`playwright-postprocessing` function**: Must use **`playwright-postprocessing-role`** (its dedicated role created in section 2).
+- **All other Lambda functions** (`playwright-api-backend`, `playwright-coordinator`, `playwright-error-handler`): Use the shared **`playwright-lambda-role`** (created in section 1).
+{{% /notice %}}

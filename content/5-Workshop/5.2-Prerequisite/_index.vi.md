@@ -11,6 +11,7 @@ pre : " <b> 5.2. </b> "
 Trước khi bắt tay vào triển khai phần lõi của hệ thống Playwright Serverless, chúng ta cần hoàn thiện một số bước chuẩn bị mang tính nền tảng.
 
 Các bước này bao gồm:
+
 1. **Công cụ & API Key:** Tải mã nguồn và lấy khóa kết nối Google Gemini AI.
 2. **Khởi tạo VPC:** Xây dựng mạng riêng ảo an toàn cho các container Playwright.
 3. **Cấu hình IAM:** Phân quyền chặt chẽ cho các dịch vụ Lambda và ECS.

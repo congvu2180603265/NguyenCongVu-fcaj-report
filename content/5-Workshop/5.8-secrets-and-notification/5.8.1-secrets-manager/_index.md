@@ -79,7 +79,7 @@ Never expose your real API Key in screenshots or public repositories. Blur or hi
 Enter the following information:
 
 | Property | Value |
-|------------|------------------------------|
+| ------------ | ------------------------------ |
 | Secret name | `playwright/openai-api-key` |
 | Description | AI API Key for Playwright Lambda |
 
@@ -110,7 +110,7 @@ Review the configuration.
 Verify:
 
 | Property | Value |
-|------|------|
+| ------ | ------ |
 | Secret Type | Other type of secret |
 | Secret Name | playwright/openai-api-key |
 | Encryption Key | aws/secretsmanager |
@@ -141,7 +141,9 @@ The page should display:
 
 ![Secret created successfully](/images/5-Workshop/5.8-secrets-and-notification/5.8.1-secrets-manager/04-secret-created.png?featherlight=false&width=90pc)
 
-Do **not** click **Retrieve secret value** when taking screenshots because the API Key will be displayed.
+{{% notice note %}}
+Do not click **Retrieve secret value** when taking screenshots, as it will reveal your API Key.
+{{% /notice %}}
 
 ---
 
@@ -234,7 +236,12 @@ Retrieve Secret
 Call AI API
 ```
 
-The AI API Key is now securely stored and can be accessed only by the Lambda function through AWS Secrets Manager.
+After completing this section:
+
+- The AI API Key is securely stored in AWS Secrets Manager.
+- Lambda does not need to store the API Key in the source code.
+- The API Key is retrieved only when the Lambda function executes.
+- Easily change or update the API Key without modifying the source code.
 
 ---
 

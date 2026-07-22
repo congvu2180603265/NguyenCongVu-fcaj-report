@@ -67,6 +67,7 @@ Since the Fargate container writes the `running/success/failed` status directly 
 ![Create an inline policy](/images/5-Workshop/5.3-storage-and-database/9-create-inline-policy.png?featherlight=false&width=90pc)
 
 **Step 15:** Select the **JSON** tab, paste the following content:
+
 ```json
 {
   "Version": "2012-10-17",

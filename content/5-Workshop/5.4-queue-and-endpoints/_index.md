@@ -1,4 +1,4 @@
-﻿---
+---
 title : "Queue & VPC Endpoints"
 date : 2026-07-10
 weight : 4
@@ -48,9 +48,9 @@ pre : " <b> 5.4. </b> "
 
 **Step 5:** The results table will show 2 rows with the same service name — tick the one whose **Type = Gateway** (don't select the Interface row below it).
 
-**Step 6:** Scroll down to **Network settings → VPC**: click the "Select a VPC" dropdown, choose `vpc-0b31d28ff732f70c9` (displayed as `playwright-vpc`).
+**Step 6:** Scroll down to **Network settings → VPC**: click the "Select a VPC" dropdown, choose the VPC displayed as `playwright-vpc`.
 
-**Step 7:** After selecting the VPC, the Console will automatically show an additional **"Route tables"** section below (this section only appears after a VPC is selected, it's not a missing UI element) — tick the route table `playwright-private-rtb` (ID `rtb-08b47df38de10ba54`). *Required — if not ticked, S3 traffic won't go through the endpoint.*
+**Step 7:** After selecting the VPC, the Console will automatically show a **"Route tables"** section below (this section only appears after selecting a VPC, it is not missing from the UI) — check the box for the `playwright-private-rtb` route table. *Required — if not checked, S3 traffic will not go through the endpoint.*
 
 **Step 8:** The **Additional settings** section (IP address type, DNS record IP type): leave at default, no need to change.
 
@@ -76,11 +76,11 @@ pre : " <b> 5.4. </b> "
 
 **Step 4:** Type: **Interface**.
 
-**Step 5:** VPC: `vpc-0b31d28ff732f70c9`.
+**Step 5:** VPC: Select `playwright-vpc`.
 
-**Step 6:** Subnets: select `subnet-0eb315a2b47f1f1e0`.
+**Step 6:** Subnets: Select `playwright-private-subnet`.
 
-**Step 7:** Security group: uncheck the default SG, tick `sg-05517c073af790abc`.
+**Step 7:** Security group: Uncheck the default SG, tick `playwright-sg-endpoint`.
 
 **Step 8:** Enable DNS name: keep it checked (required, so services automatically resolve through the endpoint instead of the internet).
 
@@ -104,11 +104,11 @@ pre : " <b> 5.4. </b> "
 
 **Step 4:** Type: **Interface**.
 
-**Step 5:** VPC: `vpc-0b31d28ff732f70c9`.
+**Step 5:** VPC: Select `playwright-vpc`.
 
-**Step 6:** Subnets: select `subnet-0eb315a2b47f1f1e0`.
+**Step 6:** Subnets: Select `playwright-private-subnet`.
 
-**Step 7:** Security group: uncheck the default SG, tick `sg-05517c073af790abc`.
+**Step 7:** Security group: Uncheck the default SG, tick `playwright-sg-endpoint`.
 
 **Step 8:** Enable DNS name: keep it checked.
 
@@ -130,11 +130,11 @@ pre : " <b> 5.4. </b> "
 
 **Step 4:** Type: **Interface**.
 
-**Step 5:** VPC: `vpc-0b31d28ff732f70c9`.
+**Step 5:** VPC: Select `playwright-vpc`.
 
-**Step 6:** Subnets: `subnet-0eb315a2b47f1f1e0`.
+**Step 6:** Subnets: Select `playwright-private-subnet`.
 
-**Step 7:** Security group: `sg-05517c073af790abc`.
+**Step 7:** Security group: Uncheck the default SG, tick `playwright-sg-endpoint`.
 
 **Step 8:** Enable DNS name: keep it checked.
 
@@ -152,7 +152,7 @@ pre : " <b> 5.4. </b> "
 
 **Step 3:** Check that **Private DNS names enabled** = **Yes**. If it's No, click **Actions → Modify private DNS name** to enable it.
 
-![Check Private DNS names enabled - api](/images/5-Workshop/5.4-queue-and-endpoints/13-check-private-dns-api.png?featherlight=false&width=90pc ) 
+![Check Private DNS names enabled - api](/images/5-Workshop/5.4-queue-and-endpoints/13-check-private-dns-api.png?featherlight=false&width=90pc )
 ![Check Private DNS names enabled - dkr](/images/5-Workshop/5.4-queue-and-endpoints/14-check-private-dns-dkr.png?featherlight=false&width=90pc)
 ![Check Private DNS names enabled - logs](/images/5-Workshop/5.4-queue-and-endpoints/15-check-private-dns-logs.png?featherlight=false&width=90pc)
 

@@ -12,7 +12,6 @@ pre : " <b> 5.10. </b> "
 
 Deploy the Dashboard UI to S3 and distribute it through CloudFront.
 
-
 ---
 
 #### Part 1: Update Configuration and Build the Frontend
@@ -20,6 +19,7 @@ Deploy the Dashboard UI to S3 and distribute it through CloudFront.
 **Step 1:** Open the React source code (Dashboard, login, test history, report viewing) in VS Code (or an equivalent IDE).
 
 **Step 2:** Open the config file (e.g. `src/config.js`), update it:
+
 ```js
 // ===== AWS CONFIGURATION =====
 // Update these values after deploying to AWS
@@ -32,9 +32,11 @@ export const COGNITO_CONFIG = {
   clientId: '492jkd32vd241c2tuv1v160g4o',
 }
 ```
+
 Here, `API_BASE_URL` is the **Invoke URL** from section 5.9, and `userPoolId`/`clientId` come from Cognito Console → User pool → App integration.
 
 **Step 3:** Verify the API endpoints below are correctly built from `API_BASE_URL`:
+
 ```js
 // API endpoints
 export const API_ENDPOINTS = {
@@ -57,6 +59,7 @@ export const API_ENDPOINTS = {
 ![config.js updated with the Invoke URL and Cognito settings](/images/5-Workshop/5.10-frontend/1-config-js-updated.png?featherlight=false&width=90pc)
 
 **Step 4:** Open a Terminal in VS Code (or a separate terminal), `cd` into the Frontend project directory, run:
+
 ```bash
 npm run build
 ```
@@ -87,7 +90,11 @@ npm run build
 
 **Step 2:** Scroll down to **Block public access (bucket settings)**, click **Edit**.
 
+![Block public access section in Permissions tab](/images/5-Workshop/5.10-frontend/3.2-s3-block-public-access.png?featherlight=false&width=90pc)
+
 **Step 3:** Keep **all 4 options checked** (Block all public access = ON) — since only CloudFront will access it, via Origin Access Control, not the bucket directly.
+
+![Tick Block all public access](/images/5-Workshop/5.10-frontend/3.3-s3-edit-block-public-access.png?featherlight=false&width=90pc)
 
 **Step 4:** Click **Save changes**, type `confirm` in the confirmation box, click **Confirm**.
 
@@ -95,52 +102,67 @@ npm run build
 
 #### Part 4: Create a CloudFront Distribution
 
-**Step 1:** In the AWS Console search bar, search for `CloudFront`, select **CloudFront**.
-![Open the CloudFront Console](/images/5-Workshop/5.10-frontend/4.1-cloudfront-console.png?featherlight=false&width=90pc)
+**Step 1:** In the AWS Console search bar, search for `CloudFront` → Select **CloudFront** → Click the orange **Create distribution** button. In **Step 1: Choose a plan**, ensure the **Free ($0/month)** plan is selected (it should be selected by default) → Scroll down to the bottom right corner and click the **Next** button.
 
-**Step 2:** Click the orange **Create distribution** button.
+![Choose Free plan](/images/5-Workshop/5.10-frontend/4.2-cloudfront-choose-plan.png?featherlight=false&width=90pc)
 
-**Step 3:** Origin domain: click the field, select bucket `playwright-webui-xxx.s3.ap-southeast-1.amazonaws.com` from the suggestion list.  
-![Select the origin domain from the suggested list](/images/5-Workshop/5.10-frontend/4.3-cloudfront-origin-domain.png?featherlight=false&width=90pc)
-**Step 4:** Origin access: select **Origin access control settings (recommended)** → click **Create control setting** → keep the default Signing behavior = **Sign requests (recommended)** → **Create**.
-**Step 5:** Scroll down to **Default root object**, enter `index.html`.
-![Set the default root object to index.html](/images/5-Workshop/5.10-frontend/4.5-cloudfront-default-root-object.png?featherlight=false&width=90pc)
-**Step 6:** Leave the remaining settings (Price class, WAF, etc.) at default; you may set a Name of your choosing (e.g. `playwright-cloudfront-123`). Click **Create distribution**.
-![Create the CloudFront distribution](/images/5-Workshop/5.10-frontend/4.6-cloudfront-create-distribution.png?featherlight=false&width=90pc)
-**Step 7:** Confirm the message **"Successfully created new distribution"** — note down the **Distribution domain name** (e.g. `d2qnbza21ik9r.cloudfront.net`); **Last modified** will now show status **Deploying**.
-![CloudFront distribution deploying](/images/5-Workshop/5.10-frontend/4.7-cloudfront-deploying.png?featherlight=false&width=90pc)
-**Step 8:** After creation, CloudFront shows a yellow banner: **"The S3 bucket policy needs to be updated"** → click **Copy policy**.
-![CloudFront banner to update the S3 bucket policy](/images/5-Workshop/5.10-frontend/4.8-cloudfront-update-s3-policy.png?featherlight=false&width=90pc)
-**Step 9:** Open a new tab, go back to the **S3 bucket** `playwright-webui-xxx` → **Permissions** tab → scroll down to **Bucket policy** → click **Edit** → paste the copied policy → **Save changes**.
-![Updated S3 bucket policy](/images/5-Workshop/5.10-frontend/4.9-s3-bucket-policy-updated.png?featherlight=false&width=90pc)
-**Step 10:** Go back to the **Cognito Console** → User pool `playwright-user-pool` → **App integration** → App client `playwright-app` → **Edit** → update **Callback URL(s)** to the CloudFront Domain Name (replacing the temporary `http://localhost:3000` from section 5.9) → **Save changes**.
-![Updated callback URL in the Cognito app client](/images/5-Workshop/5.10-frontend/4.10-cognito-callback-url-updated.png?featherlight=false&width=90pc)
+**Step 2 (Get started):** In the **Distribution options** section, enter a name in the **Distribution name** field (e.g., `playwright-cloudfront-123`), then scroll to the bottom of the page and click **Next**.
+
+![CloudFront Console](/images/5-Workshop/5.10-frontend/4.1-cloudfront-console.png?featherlight=false&width=90pc)
+
+**Step 3 (Specify origin):** This is where you configure the S3 Bucket:
+- **Origin domain**: Click the field and select bucket `playwright-webui-xxx.s3.ap-southeast-1.amazonaws.com`.
+- **Origin access**: Select **Origin access control settings (recommended)** → Click **Create new OAC** → Keep the default settings and click **Create**.
+
+![Specify origin and Origin access settings](/images/5-Workshop/5.10-frontend/4.3-cloudfront-specify-origin.png?featherlight=false&width=90pc)
+
+**Step 4 (Settings):** Continue scrolling down to the **Settings** section, check **Allow private S3 bucket access to CloudFront**, keep the other recommended settings below, and click **Next**.
+
+![Set Origin Settings](/images/5-Workshop/5.10-frontend/4.4-cloudfront-origin-settings.png?featherlight=false&width=90pc)
+
+**Step 5:** Click **Next** to proceed through the remaining steps → When you reach the final step (Review and create), click **Create distribution**.
+
+![Review and create distribution](/images/5-Workshop/5.10-frontend/4.5-cloudfront-review-create.png?featherlight=false&width=90pc)
+
+**Step 6 (Configure Default Root Object):** After creation, on the Distribution overview page, scroll down to the **Settings** section → Click **Edit**.
+
+![Distribution overview page, scroll down to Settings](/images/5-Workshop/5.10-frontend/4.6.1.png?featherlight=false&width=90pc)
+
+In the **Default root object** field, enter `index.html`. Scroll to the bottom of the page → Click **Save changes**.
+
+![Enter index.html in Default root object and Save changes](/images/5-Workshop/5.10-frontend/4.6.2.png?featherlight=false&width=90pc)
+
+**Step 7 (Update S3 Bucket Policy):** CloudFront will show a yellow banner **"The S3 bucket policy needs to be updated"** → Click **Copy policy** → Open a new tab, go to the **S3 bucket** (`playwright-webui-xxx`) → **Permissions** tab → Scroll down to **Bucket policy** and click **Edit** → Paste the copied policy → Click **Save changes**.
+
+> 💡 **Note:** This grants CloudFront permission to read content from S3, while preventing external users from directly accessing S3 via public links (AWS security best practice).
+
+![Paste policy into S3 Bucket Policy](/images/5-Workshop/5.10-frontend/4.9-s3-bucket-policy-updated.png?featherlight=false&width=90pc)
+
+**Step 8 (Update Callback URL):** Go back to the **Cognito Console** → User pool → **App integration** → App client → Click **Edit** → Update **Callback URL(s)** to the CloudFront Domain Name (e.g. `https://dxxxx.cloudfront.net`) → Click **Save changes**.
+
+> 💡 **Note:** You need to replace the temporary `http://localhost:3000` with the CloudFront Domain so that after successful login, Cognito knows to redirect users back to the actual web interface.
+
+![Update Callback URL in Cognito App Client](/images/5-Workshop/5.10-frontend/4.10-cognito-callback-url-updated.png?featherlight=false&width=90pc)
 
 ---
 
-#### Part 5: Get the Domain Name and Verify
+#### Part 5: Verification and Finalization
 
-**Step 1:** Go back to the **CloudFront Console** → select the Distribution you just created.
+**Step 1:** Go back to the **CloudFront Console**, wait for the **Status** column to switch from **Deploying** to **Enabled** (usually takes 3-5 minutes).
 
-**Step 2:** Wait for the **Status** column to switch from **Deploying** to **Enabled** (usually takes 3-5 minutes).
+![Distribution deploying, wait for Enabled status](/images/5-Workshop/5.10-frontend/4.7-cloudfront-deploying.png?featherlight=false&width=90pc)
 
-**Step 3:** Copy the **Domain Name** shown in the Console, in the form `dxxxxxxxxxxxxx.cloudfront.net`.
+**Step 2:** Copy the **Domain Name** (e.g. `dxxxxxxxxxxxxx.cloudfront.net`) and open it in a browser (preferably in an incognito tab) to verify the interface displays correctly.
 
-**Step 4:** Open the Domain Name in a browser (use an incognito tab to avoid caching), confirm the Dashboard shows the correct login screen.
-![Dashboard displaying the login page](/images/5-Workshop/5.10-frontend/5.4-cloudfront-dashboard-login.png?featherlight=false&width=90pc)
-**Step 5:** Try accessing the S3 URL directly, in the form `https://playwright-webui-xxx.s3.ap-southeast-1.amazonaws.com/index.html` — it should be blocked, returning a **403 Forbidden** error.
+![Dashboard showing the correct login UI](/images/5-Workshop/5.10-frontend/5.4-cloudfront-dashboard-login.png?featherlight=false&width=90pc)
 
-![Direct S3 access blocked with 403 Forbidden](/images/5-Workshop/5.10-frontend/5.5-s3-direct-403-forbidden.png?featherlight=false&width=90pc)
+- Direct access to the S3 URL should be blocked (returning a **403 Forbidden** error); it must go through CloudFront to be viewable.
 
----
+![Direct S3 access blocked 403 Forbidden](/images/5-Workshop/5.10-frontend/5.5-s3-direct-403-forbidden.png?featherlight=false&width=90pc)
 
-#### Verification
+- Try logging in with one of the 3 test accounts (Admin/QA/Developer) created in section 5.9, confirm the login is successful and APIs can be called (no CORS/401 errors).
 
-- Open the CloudFront Domain Name in a browser, the Dashboard displays correctly.
-- Direct access to the S3 URL is blocked (403); it must go through CloudFront to be viewable.
-- Log in with one of the 3 test accounts (Admin/QA/Developer) created in section 5.9, confirm login succeeds and the API can be called (no CORS/401 errors).
-
-**Note:** CloudFront caches content — if you rebuild and re-upload the Frontend but don't see the changes, go to CloudFront Console → select the Distribution → **Invalidations** tab → **Create invalidation** → enter `/*` for Object paths → **Create invalidation**.
+> 💡 **Note:** If you modify the Frontend code and re-upload it to S3 later but don't see the changes on the web, go to the **Invalidations** tab in CloudFront → **Create invalidation** with the object path `/*` to clear the old cache.
 
 ---
 

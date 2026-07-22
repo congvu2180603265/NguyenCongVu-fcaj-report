@@ -17,6 +17,7 @@ Open your browser and navigate to your WebUI URL (from CloudFront or S3 static w
 #### 2. Manage Test Suites
 
 The next step is to upload your Playwright test script.
+
 - In the left menu, select **Test Suites**.
 - Click the **Add Test Suite** button in the top right corner.
 
@@ -33,6 +34,7 @@ The next step is to upload your Playwright test script.
 #### 3. Manual Test Trigger
 
 Now we will manually trigger a test execution.
+
 - In the left menu, select **Manual Trigger**.
 
 ![Manual Trigger](/images/5-Workshop/5.12-end-to-end-test/4-manual-trigger.jpg)
@@ -56,6 +58,7 @@ Once the message is successfully sent, the screen will display **"Request queued
 #### 4. View Test History and Details
 
 To monitor the results of the executions:
+
 - Go to the **History** menu. Here you will see a list of test runs along with their status (`Pass` or `Fail`), duration, and trigger source. All this data is persistently stored in DynamoDB.
 
 ![Test History](/images/5-Workshop/5.12-end-to-end-test/8-history.jpg)

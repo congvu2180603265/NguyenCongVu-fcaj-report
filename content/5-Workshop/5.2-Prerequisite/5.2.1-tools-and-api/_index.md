@@ -11,15 +11,17 @@ pre : " <b> 5.2.1. </b> "
 Before building the Serverless Playwright system, you need to prepare the following resources:
 
 **1. AWS Account**
+
 - You need access to the AWS Management Console.
 - It is recommended to use an account with Administrator Access to perform this Lab smoothly.
 
 **2. Source Code**
+
 - You need to download the pre-packaged source codes for the Frontend (UI) and Backend (processing).
 - Download the source files below:
 
 | File | Description |
-|------|-------------|
+| ------ | ------------- |
 | [lambda-backend.zip](/5-Workshop/5.2-Prerequisite/5.2.1-tools-and-api/lambda-backend.zip) | Main backend Lambda function |
 | [lambda-coordinator.zip](/5-Workshop/5.2-Prerequisite/5.2.1-tools-and-api/lambda-coordinator.zip) | Coordinator Lambda function |
 | [lambda-error-handler.zip](/5-Workshop/5.2-Prerequisite/5.2.1-tools-and-api/lambda-error-handler.zip) | Error handler Lambda function |
@@ -27,10 +29,9 @@ Before building the Serverless Playwright system, you need to prepare the follow
 | [dist.zip](/5-Workshop/5.2-Prerequisite/5.2.1-tools-and-api/dist.zip) | Frontend (UI) build for S3 |
 
 > [!NOTE]
-> **For `dist.zip` (Frontend):** After downloading, **extract** the zip file and upload **the contents inside** (not the zip itself) to your S3 WebUI bucket. The S3 bucket for the frontend will be created in **[5.2.3. Create S3](../5.2.3-create-s3/)**.
+> **For `dist.zip` (Frontend):** After downloading, **extract** the zip file and upload **the contents inside** (not the zip itself) to your S3 WebUI bucket. The S3 bucket for the frontend will be created in **[5.2.3. Create S3](../5.2.4-create-s3/)**.
 >
 > **For the Lambda `.zip` files:** These are uploaded directly (without extracting) when deploying each Lambda function in the corresponding sections.
-
 
 **3. Google Gemini API Key**
 

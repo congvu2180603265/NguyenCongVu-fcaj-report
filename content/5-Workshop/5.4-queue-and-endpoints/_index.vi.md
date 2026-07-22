@@ -1,4 +1,4 @@
-﻿---
+---
 title : "Hàng đợi & VPC Endpoints"
 date : 2026-07-10
 weight : 4
@@ -48,9 +48,9 @@ pre : " <b> 5.4. </b> "
 
 **Bước 5:** Trong bảng kết quả sẽ hiện 2 dòng cùng service name — tick chọn đúng dòng có cột **Type = Gateway** (đừng chọn dòng Interface bên dưới).
 
-**Bước 6:** Kéo xuống mục **Network settings → VPC**: bấm dropdown "Select a VPC", chọn `vpc-0b31d28ff732f70c9` (tên hiển thị `playwright-vpc`).
+**Bước 6:** Kéo xuống mục **Network settings → VPC**: bấm dropdown "Select a VPC", chọn VPC có tên hiển thị là `playwright-vpc`.
 
-**Bước 7:** Sau khi chọn VPC xong, Console sẽ tự hiện thêm mục **"Route tables"** bên dưới (mục này chỉ xuất hiện sau khi đã chọn VPC, không phải bị thiếu giao diện) — tick chọn route table `playwright-private-rtb` (ID `rtb-08b47df38de10ba54`). *Bắt buộc — nếu không tick, S3 sẽ không đi qua endpoint.*
+**Bước 7:** Sau khi chọn VPC xong, Console sẽ tự hiện thêm mục **"Route tables"** bên dưới (mục này chỉ xuất hiện sau khi đã chọn VPC, không phải bị thiếu giao diện) — tick chọn route table `playwright-private-rtb`. *Bắt buộc — nếu không tick, S3 sẽ không đi qua endpoint.*
 
 **Bước 8:** Phần **Additional settings** (IP address type, DNS record IP type): giữ mặc định, không cần đổi.
 
@@ -76,11 +76,11 @@ pre : " <b> 5.4. </b> "
 
 **Bước 4:** Type: **Interface**.
 
-**Bước 5:** VPC: `vpc-0b31d28ff732f70c9`.
+**Bước 5:** VPC: Chọn `playwright-vpc`.
 
-**Bước 6:** Subnets: chọn `subnet-0eb315a2b47f1f1e0`.
+**Bước 6:** Subnets: Chọn `playwright-private-subnet`.
 
-**Bước 7:** Security group: bỏ chọn SG mặc định, tick chọn `sg-05517c073af790abc`.
+**Bước 7:** Security group: Bỏ chọn SG mặc định, tick chọn `playwright-sg-endpoint`.
 
 **Bước 8:** Enable DNS name: giữ tick (bắt buộc, để các service tự động resolve qua endpoint thay vì internet).
 
@@ -104,11 +104,11 @@ pre : " <b> 5.4. </b> "
 
 **Bước 4:** Type: **Interface**.
 
-**Bước 5:** VPC: `vpc-0b31d28ff732f70c9`.
+**Bước 5:** VPC: Chọn `playwright-vpc`.
 
-**Bước 6:** Subnets: chọn `subnet-0eb315a2b47f1f1e0`.
+**Bước 6:** Subnets: Chọn `playwright-private-subnet`.
 
-**Bước 7:** Security group: bỏ chọn SG mặc định, tick chọn `sg-05517c073af790abc`.
+**Bước 7:** Security group: Bỏ chọn SG mặc định, tick chọn `playwright-sg-endpoint`.
 
 **Bước 8:** Enable DNS name: giữ tick.
 
@@ -130,11 +130,11 @@ pre : " <b> 5.4. </b> "
 
 **Bước 4:** Type: **Interface**.
 
-**Bước 5:** VPC: `vpc-0b31d28ff732f70c9`.
+**Bước 5:** VPC: Chọn `playwright-vpc`.
 
-**Bước 6:** Subnets: `subnet-0eb315a2b47f1f1e0`.
+**Bước 6:** Subnets: Chọn `playwright-private-subnet`.
 
-**Bước 7:** Security group: `sg-05517c073af790abc`.
+**Bước 7:** Security group: Bỏ chọn SG mặc định, tick chọn `playwright-sg-endpoint`.
 
 **Bước 8:** Enable DNS name: giữ tick.
 
@@ -152,7 +152,7 @@ pre : " <b> 5.4. </b> "
 
 **Bước 3:** Kiểm tra dòng **Private DNS names enabled** = **Yes**. Nếu là No, bấm **Actions → Modify private DNS name** để bật.
 
-![Kiểm tra Private DNS names enabled api ](/images/5-Workshop/5.4-queue-and-endpoints/13-check-private-dns-api.png?featherlight=false&width=90pc ) 
+![Kiểm tra Private DNS names enabled api ](/images/5-Workshop/5.4-queue-and-endpoints/13-check-private-dns-api.png?featherlight=false&width=90pc )
 ![Kiểm tra Private DNS names enabled dkr](/images/5-Workshop/5.4-queue-and-endpoints/14-check-private-dns-dkr.png?featherlight=false&width=90pc)
 ![Kiểm tra Private DNS names enabled blogs](/images/5-Workshop/5.4-queue-and-endpoints/15-check-private-dns-logs.png?featherlight=false&width=90pc)
 
