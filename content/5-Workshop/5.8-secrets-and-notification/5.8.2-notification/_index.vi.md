@@ -47,7 +47,7 @@ pre : " <b> 5.8.2 </b> "
 
 **Bước 8:** Kiểm tra hộp thư đến của To-address — phải nhận được email.
 
-![Điền thông tin test email](/images/5-Workshop/5.8-secrets-and-notification/5.8.2-notification/5-mail.png?featherlight=false&width=90pc)
+![Email kiểm thử đã được nhận thành công trong hộp thư đến](/images/5-Workshop/5.8-secrets-and-notification/5.8.2-notification/5-mail.png?featherlight=false&width=90pc)
 
 ---
 

@@ -33,7 +33,7 @@ Roles → Create role
 
 **Step 1 – Select trusted entity:** Chọn **AWS service** làm trusted entity, trong phần **Use case** chọn **Lambda**, rồi nhấn **Next**.
 
-![Chọn trusted entity là Lambda](/images/5-Workshop/5.2-Prerequisite/5.2.3-configure-iam/1a-lambda-select-trusted-entity.png?featherlight=false&width=90pc)
+![Chọn Lambda làm trusted entity cho playwright-lambda-role](/images/5-Workshop/5.2-Prerequisite/5.2.3-configure-iam/1a-lambda-select-trusted-entity.png?featherlight=false&width=90pc)
 
 **Step 2 – Add permissions:** Tìm kiếm và attach lần lượt các AWS managed policy sau, rồi nhấn **Next**.
 
@@ -60,7 +60,7 @@ playwright-lambda-role
 
 Kiểm tra lại phần **Permissions policies** đã có đủ 8 policy ở trên, trust policy có chứa service principal `lambda.amazonaws.com`, sau đó chọn **Create role**.
 
-![Kiểm tra và tạo role](/images/5-Workshop/5.2-Prerequisite/5.2.3-configure-iam/2-lambda-role-created.png?featherlight=false&width=90pc)
+![Kiểm tra và tạo playwright-lambda-role](/images/5-Workshop/5.2-Prerequisite/5.2.3-configure-iam/2-lambda-role-created.png?featherlight=false&width=90pc)
 
 {{% notice note %}}
 Với môi trường production, hãy thay các policy `FullAccess` của AWS bằng policy tùy chỉnh giới hạn theo action và resource ARN cụ thể. Secrets Manager chỉ cần quyền `secretsmanager:GetSecretValue`. Không cấp `IAMFullAccess` — chỉ cần quyền `iam:PassRole` giới hạn theo ARN.
@@ -76,7 +76,7 @@ Tạo thêm một role mới, chọn:
 
 **Step 1 – Select trusted entity:** Chọn **AWS service** làm trusted entity, trong phần **Use case** chọn **Lambda**, rồi nhấn **Next**.
 
-![Chọn trusted entity là Lambda](/images/5-Workshop/5.2-Prerequisite/5.2.3-configure-iam/2a-postprocessing-select-trusted-entity.png?featherlight=false&width=90pc)
+![Chọn Lambda làm trusted entity cho playwright-postprocessing-role](/images/5-Workshop/5.2-Prerequisite/5.2.3-configure-iam/2a-postprocessing-select-trusted-entity.png?featherlight=false&width=90pc)
 
 **Step 2 – Add permissions:** Attach các AWS managed policy sau, rồi nhấn **Next**.
 
@@ -103,7 +103,7 @@ playwright-postprocessing-role
 
 Kiểm tra lại phần **Permissions policies** đã có đủ 8 policy ở trên, trust policy có chứa service principal `lambda.amazonaws.com`, sau đó chọn **Create role**.
 
-![Kiểm tra và tạo role](/images/5-Workshop/5.2-Prerequisite/5.2.3-configure-iam/2d-postprocessing-created.png?featherlight=false&width=90pc)
+![Kiểm tra và tạo playwright-postprocessing-role](/images/5-Workshop/5.2-Prerequisite/5.2.3-configure-iam/2d-postprocessing-created.png?featherlight=false&width=90pc)
 
 {{% notice note %}}
 Ghi lại ARN của role này (dạng `arn:aws:iam::<account-id>:role/playwright-postprocessing-role`) — sẽ dùng để gắn cho Lambda `playwright-postprocessing` ở mục 5.7, thay vì `playwright-lambda-role`.
@@ -125,7 +125,7 @@ Tạo thêm một role mới.
 
 Sau đó nhấn **Next**.
 
-![Đặt ECS Tasks làm trusted service](/images/5-Workshop/5.2-Prerequisite/5.2.3-configure-iam/3-create-ecs-execution-role.png?featherlight=false&width=90pc)
+![Chọn ECS Tasks làm trusted service cho playwright-ecs-execution-role](/images/5-Workshop/5.2-Prerequisite/5.2.3-configure-iam/3-create-ecs-execution-role.png?featherlight=false&width=90pc)
 
 **Step 2 – Add permissions:** Tìm kiếm và attach policy sau, rồi nhấn **Next**.
 
@@ -147,7 +147,7 @@ playwright-ecs-execution-role
 
 Kiểm tra trust policy dùng service principal `ecs-tasks.amazonaws.com` và có đủ policy `AmazonECSTaskExecutionRolePolicy`, sau đó chọn **Create role**.
 
-![Kiểm tra và tạo role](/images/5-Workshop/5.2-Prerequisite/5.2.3-configure-iam/4-ecs-execution-role-created.png?featherlight=false&width=90pc)
+![Kiểm tra và tạo playwright-ecs-execution-role](/images/5-Workshop/5.2-Prerequisite/5.2.3-configure-iam/4-ecs-execution-role-created.png?featherlight=false&width=90pc)
 
 ---
 
@@ -165,7 +165,7 @@ Tạo thêm một role mới.
 
 Sau đó nhấn **Next**.
 
-![Đặt ECS Tasks làm trusted service](/images/5-Workshop/5.2-Prerequisite/5.2.3-configure-iam/6-ecs-task-role-created.png?featherlight=false&width=90pc)
+![Chọn ECS Tasks làm trusted service cho playwright-ecs-task-role](/images/5-Workshop/5.2-Prerequisite/5.2.3-configure-iam/6-ecs-task-role-created.png?featherlight=false&width=90pc)
 
 **Step 2 – Add permissions:** Ứng dụng Playwright bên trong container sử dụng task role này. Attach các policy sau, rồi nhấn **Next**.
 
@@ -187,7 +187,7 @@ playwright-ecs-task-role
 
 Kiểm tra trust policy dùng service principal `ecs-tasks.amazonaws.com` và có đủ 3 policy ở trên, sau đó chọn **Create role**.
 
-![Kiểm tra và tạo role](/images/5-Workshop/5.2-Prerequisite/5.2.3-configure-iam/7-create-ecs-task-role.png?featherlight=false&width=90pc)
+![Kiểm tra và tạo playwright-ecs-task-role](/images/5-Workshop/5.2-Prerequisite/5.2.3-configure-iam/7-create-ecs-task-role.png?featherlight=false&width=90pc)
 
 {{% notice note %}}
 Với môi trường production, thay `AmazonS3FullAccess` bằng policy tùy chỉnh chỉ cho phép `s3:PutObject` trên ARN bucket cụ thể. Tương tự, `SecretsManagerReadWrite` nên được thu hẹp xuống `secretsmanager:GetSecretValue` cho đúng secret ARN.

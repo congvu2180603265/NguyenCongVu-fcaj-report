@@ -122,7 +122,7 @@ Thiết lập đăng nhập, phân quyền người dùng và cổng API cho Fro
 
 - Nhấp **Create** để hoàn tất.
 
-![Authorizer CognitoAuth đã được tạo](/images/5-Workshop/5.9-api-gateway-and-auth/8a-authorizer-created.png?featherlight=false&width=90pc)
+![Authorizer cognito-authorizer đã được tạo thành công](/images/5-Workshop/5.9-api-gateway-and-auth/8a-authorizer-created.png?featherlight=false&width=90pc)
 
 **Gắn Authorizer vào các Routes:**
 - Chuyển lại sang tab **Attach authorizers to routes**.

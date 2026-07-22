@@ -33,7 +33,7 @@ Roles → Create role
 
 **Step 1 – Select trusted entity:** Select **AWS service** as the trusted entity, choose **Lambda** under **Use case**, then click **Next**.
 
-![Select Lambda as the trusted entity](/images/5-Workshop/5.2-Prerequisite/5.2.3-configure-iam/1a-lambda-select-trusted-entity.png?featherlight=false&width=90pc)
+![Select Lambda as the trusted entity for playwright-lambda-role](/images/5-Workshop/5.2-Prerequisite/5.2.3-configure-iam/1a-lambda-select-trusted-entity.png?featherlight=false&width=90pc)
 
 **Step 2 – Add permissions:** Search for and attach the following AWS managed policies, then click **Next**.
 
@@ -60,7 +60,7 @@ playwright-lambda-role
 
 Verify that the **Permissions policies** section shows all 8 policies above, and that the trust policy contains the `lambda.amazonaws.com` service principal, then choose **Create role**.
 
-![Verify and create role](/images/5-Workshop/5.2-Prerequisite/5.2.3-configure-iam/2-lambda-role-created.png?featherlight=false&width=90pc)
+![Verify and create playwright-lambda-role](/images/5-Workshop/5.2-Prerequisite/5.2.3-configure-iam/2-lambda-role-created.png?featherlight=false&width=90pc)
 
 {{% notice note %}}
 For production, replace broad AWS managed `FullAccess` policies with custom policies restricted by action and resource ARN. Secrets Manager requires only `secretsmanager:GetSecretValue`. Do not grant `IAMFullAccess` — only `iam:PassRole` scoped to specific ARNs is needed.
@@ -76,7 +76,7 @@ Create another new role and select:
 
 **Step 1 – Select trusted entity:** Select **AWS service** as the trusted entity, choose **Lambda** under **Use case**, then click **Next**.
 
-![Select Lambda as the trusted entity](/images/5-Workshop/5.2-Prerequisite/5.2.3-configure-iam/2a-postprocessing-select-trusted-entity.png?featherlight=false&width=90pc)
+![Select Lambda as the trusted entity for playwright-postprocessing-role](/images/5-Workshop/5.2-Prerequisite/5.2.3-configure-iam/2a-postprocessing-select-trusted-entity.png?featherlight=false&width=90pc)
 
 **Step 2 – Add permissions:** Search for and attach the following AWS managed policies, then click **Next**.
 
@@ -103,7 +103,7 @@ playwright-postprocessing-role
 
 Verify that the **Permissions policies** section shows all 8 policies above, and that the trust policy contains the `lambda.amazonaws.com` service principal, then choose **Create role**.
 
-![Verify and create role](/images/5-Workshop/5.2-Prerequisite/5.2.3-configure-iam/2d-postprocessing-created.png?featherlight=false&width=90pc)
+![Verify and create playwright-postprocessing-role](/images/5-Workshop/5.2-Prerequisite/5.2.3-configure-iam/2d-postprocessing-created.png?featherlight=false&width=90pc)
 
 {{% notice note %}}
 Note down this role's ARN (in the form `arn:aws:iam::<account-id>:role/playwright-postprocessing-role`) — it will be attached to the `playwright-postprocessing` Lambda in section 5.7, instead of `playwright-lambda-role`.
@@ -125,7 +125,7 @@ Create another new role.
 
 Then click **Next**.
 
-![Select ECS Tasks as the trusted service](/images/5-Workshop/5.2-Prerequisite/5.2.3-configure-iam/3-create-ecs-execution-role.png?featherlight=false&width=90pc)
+![Select ECS Tasks as the trusted service for playwright-ecs-execution-role](/images/5-Workshop/5.2-Prerequisite/5.2.3-configure-iam/3-create-ecs-execution-role.png?featherlight=false&width=90pc)
 
 **Step 2 – Add permissions:** Search for and attach the following policy, then click **Next**.
 
@@ -147,7 +147,7 @@ playwright-ecs-execution-role
 
 Verify that the trust policy uses the `ecs-tasks.amazonaws.com` service principal and that the `AmazonECSTaskExecutionRolePolicy` is attached, then choose **Create role**.
 
-![Verify and create role](/images/5-Workshop/5.2-Prerequisite/5.2.3-configure-iam/4-ecs-execution-role-created.png?featherlight=false&width=90pc)
+![Verify and create playwright-ecs-execution-role](/images/5-Workshop/5.2-Prerequisite/5.2.3-configure-iam/4-ecs-execution-role-created.png?featherlight=false&width=90pc)
 
 ---
 
@@ -165,7 +165,7 @@ Create another new role.
 
 Then click **Next**.
 
-![Select ECS Tasks as the trusted service](/images/5-Workshop/5.2-Prerequisite/5.2.3-configure-iam/6-ecs-task-role-created.png?featherlight=false&width=90pc)
+![Select ECS Tasks as the trusted service for playwright-ecs-task-role](/images/5-Workshop/5.2-Prerequisite/5.2.3-configure-iam/6-ecs-task-role-created.png?featherlight=false&width=90pc)
 
 **Step 2 – Add permissions:** The Playwright application inside the container uses this task role. Attach the following policies, then click **Next**.
 
@@ -187,7 +187,7 @@ playwright-ecs-task-role
 
 Verify that the trust policy uses the `ecs-tasks.amazonaws.com` service principal and that all 3 policies above are attached, then choose **Create role**.
 
-![Verify and create role](/images/5-Workshop/5.2-Prerequisite/5.2.3-configure-iam/7-create-ecs-task-role.png?featherlight=false&width=90pc)
+![Verify and create playwright-ecs-task-role](/images/5-Workshop/5.2-Prerequisite/5.2.3-configure-iam/7-create-ecs-task-role.png?featherlight=false&width=90pc)
 
 {{% notice note %}}
 For production, replace `AmazonS3FullAccess` with a custom policy that allows only `s3:PutObject` on a specific bucket ARN. Similarly, `SecretsManagerReadWrite` should be narrowed down to `secretsmanager:GetSecretValue` for the exact secret ARN.

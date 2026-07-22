@@ -122,7 +122,7 @@ Don't forget to navigate back to the **AWS Lambda** console, open the `playwrigh
 
 - Click **Create** to complete.
 
-![Authorizer CognitoAuth created](/images/5-Workshop/5.9-api-gateway-and-auth/8a-authorizer-created.png?featherlight=false&width=90pc)
+![Authorizer cognito-authorizer created successfully](/images/5-Workshop/5.9-api-gateway-and-auth/8a-authorizer-created.png?featherlight=false&width=90pc)
 
 **Attach Authorizer to Routes:**
 - Switch back to the **Attach authorizers to routes** tab.

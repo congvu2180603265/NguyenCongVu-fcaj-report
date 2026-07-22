@@ -47,7 +47,7 @@ pre : " <b> 5.8.2 </b> "
 
 **Step 8:** Check the To-address inbox — the email should have arrived.
 
-![Fill in the test email form](/images/5-Workshop/5.8-secrets-and-notification/5.8.2-notification/5-mail.png?featherlight=false&width=90pc)
+![Test email received successfully in the recipient inbox](/images/5-Workshop/5.8-secrets-and-notification/5.8.2-notification/5-mail.png?featherlight=false&width=90pc)
 
 ---
 
